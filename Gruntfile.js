@@ -4,6 +4,7 @@
 
 //const fs = require( 'fs' );
 const _ = require( 'lodash' );
+const path = require( 'path' );
 //const textReplace = require('grunt-text-replace/lib/grunt-text-replace');
 
 module.exports = function gruntInit( grunt ) {
@@ -13,6 +14,7 @@ module.exports = function gruntInit( grunt ) {
 	const jsLib = [
 		'lib/**.js',
 	];
+	const jsLibCwd = jsLib.map( v => path.relative( 'lib', v ));
 	const jsAssets = _.concat([
 		'Gruntfile.js',
 	], jsLib );
@@ -74,11 +76,18 @@ module.exports = function gruntInit( grunt ) {
 			dist: {
 				files: [{
 					expand: true,
-					cwd:    '.',
-					src:    jsLib,
+					cwd:    'dist',
+					src:    jsLibCwd,
 					dest:   'dist/',
 					ext:    '.js',
 				}],
+			},
+		},
+		browserify: {
+			dist: {
+				files: {
+					'dist/trigger.js': [ 'lib/trigger.js' ],
+				},
 			},
 		},
 	});
@@ -88,6 +97,7 @@ module.exports = function gruntInit( grunt ) {
 	grunt.loadNpmTasks( 'grunt-babel' );
 	grunt.loadNpmTasks( 'gruntify-eslint' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
+	grunt.loadNpmTasks( 'grunt-browserify' );
 
 	require( 'load-grunt-tasks' )( grunt );
 
@@ -101,6 +111,7 @@ module.exports = function gruntInit( grunt ) {
 		'dist',
 		[
 			'eslint:strict',
+			'browserify:dist',
 			'babel:dist',
 			'uglify:dist',
 		]

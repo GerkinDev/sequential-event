@@ -9,12 +9,8 @@
 	},
 	"globals": {
 		"require": false,
-		"define": false,
-		"l": false,
-		"c": false,
-		"EventEmitter": false,
-		"window": false,
-		"global": false
+		"process": false,
+		"module": false
 	},
 	"rules": {
 		"no-console": 0,
@@ -31,7 +27,7 @@
 		"func-names": ["error", "always"],
 		"func-name-matching": ["error", "always"],
 		"keyword-spacing": ["error", { "before": true, "after": true }],
-		"new-parens": "error",	
+		"new-parens": "error",
 		"object-curly-newline": ["error", {
 			"minProperties": 1
 		}],
