@@ -36,3 +36,9 @@ eventEmitter.emit( 'hello' ).then(() => {
 > Hello world! Time is 2017-07-24T17:03:43.269Z  
 > How are you? Time is 2017-07-24T17:03:43.270Z  
 > Finished event propagation on 2017-07-24T17:03:43.270Z  
+
+## API
+
+The API is based on [Node's EventEmitter](https://nodejs.org/api/events.html). This package provides a re-implementation of the `emit` method.
+
+See the [Node EventEmitter](https://nodejs.org/api/events.html) for methods documentation

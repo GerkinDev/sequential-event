@@ -113,6 +113,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         /**
          * @classdesc Event emitter that guarantees sequential execution of handlers. Each handler may return a **Promise**
          * @extends EventEmitter
+         * @see {@link https://nodejs.org/api/events.html Node EventEmitter}
          */
 
         var SequentialEvent = function (_EventEmitter) {
