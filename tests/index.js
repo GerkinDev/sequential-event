@@ -157,5 +157,3 @@ describe( 'Event Emitter', ()=> {
 		});
 	});
 });
-
-//console.log(, mySequentialEvent1.on, mySequentialEvent1.emit);
