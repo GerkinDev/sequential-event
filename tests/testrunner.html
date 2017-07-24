@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Trigger.js</title>
+		<!-- Load libraries start -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.css">
+		<!-- Load libraries  end -->
+	</head>
+	<body>
+		<!-- Mocha initialization start -->
+		<div id="mocha"></div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/expect.js/0.2.0/expect.min.js"></script>
+
+		<script>
+			console.log(Object.keys(window));
+			if(window.initMochaPhantomJS){
+				initMochaPhantomJS();
+			}
+			mocha.setup('bdd');
+		</script>
+		<!-- Mocha initialization end -->
+
+		<!-- Load our package and test files start -->
+		<script src="../dist/trigger.min.js"></script>
+		<script src="index.js"></script>
+		<!-- Load our package and test files end -->
+
+		<!-- Run tests start -->
+		<script>
+			mocha.checkLeaks();
+			if (window.mochaPhantomJS) {
+				mochaPhantomJS.run();
+			} else {
+				mocha.run();
+			}
+		</script>
+		<!-- Run tests end -->
+	</body>
+</html>

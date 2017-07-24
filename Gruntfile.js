@@ -17,6 +17,7 @@ module.exports = function gruntInit( grunt ) {
 	const jsLibCwd = jsLib.map( v => path.relative( 'lib', v ));
 	const jsAssets = _.concat([
 		'Gruntfile.js',
+		'tests/index.js',
 	], jsLib );
 
 	grunt.initConfig({
@@ -85,8 +86,12 @@ module.exports = function gruntInit( grunt ) {
 		},
 		browserify: {
 			dist: {
-				files: {
-					'dist/trigger.js': [ 'lib/trigger.js' ],
+				src:     [ 'lib/trigger.js' ],
+				dest:    'dist/trigger.js',
+				options: {
+					browserifyOptions: {
+						standalone: 'Trigger',
+					},
 				},
 			},
 		},

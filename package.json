@@ -4,8 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "mocha tests/index.js",
-		"dist": "npm run test && grunt dist && grunt documentate"
+		"test-node": "mocha tests/index.js",
+		"test-browser": "mocha tests/testrunner.html",
+		"dist": "grunt dist && grunt documentate",
+		"build": "npm run test-node && npm run dist"
 	},
 	"author": "Gerkin",
 	"license": "GPLv3",
@@ -21,7 +23,8 @@
 		"ink-docstrap": "^1.3.0",
 		"load-grunt-tasks": "^3.5.2",
 		"lodash": "^4.17.4",
-		"mocha": "^3.4.2"
+		"mocha": "^3.4.2",
+		"mocha-phantomjs": "^4.1.0"
 	},
 	"dependencies": []
 }
