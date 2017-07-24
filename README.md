@@ -34,7 +34,8 @@ For usage in the browser, use the files in the `dist` directory
 	});
 
 *Sample output*
-> Time before emit event is 2017-07-24T16:49:08.433Z
-> Hello world! Time is 2017-07-24T16:49:08.549Z
-> How are you? Time is 2017-07-24T16:49:08.755Z
-> Finished event propagation on 2017-07-24T16:49:08.756Z
+
+> Time before emit event is 2017-07-24T16:49:08.433Z  
+> Hello world! Time is 2017-07-24T16:49:08.549Z  
+> How are you? Time is 2017-07-24T16:49:08.755Z  
+> Finished event propagation on 2017-07-24T16:49:08.756Z  
