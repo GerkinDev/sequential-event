@@ -1,11 +1,11 @@
 'use strict';
 
-/* global describe:false, it: false, Trigger: false, expect: false, exports: false, global: false */
+/* global describe:false, it: false, SequentialEvent: false, expect: false, exports: false, global: false */
 
 (() => {
 	// ....
 	if ( 'object' === typeof exports && typeof exports.nodeName !== 'string' ) {
-		global.Trigger = require( '../index' );
+		global.SequentialEvent = require( '../index' );
 		global.expect = require( 'expect.js' );
 	}
 })();
@@ -14,12 +14,12 @@ describe( 'Event Emitter', ()=> {
 	describe( 'Synchrone events', ()=> {
 		it( 'Single event, single callback', done => {
 			const called = {};
-			let myTrigger1 = new Trigger();
+			let mySequentialEvent1 = new SequentialEvent();
 
-			myTrigger1.on( 'test', ()=> {
+			mySequentialEvent1.on( 'test', ()=> {
 				called.test = true;
 			});
-			myTrigger1.emit( 'test' ).then(()=> {
+			mySequentialEvent1.emit( 'test' ).then(()=> {
 				try {
 					expect( called ).to.only.have.property( 'test', true );
 					return done();
@@ -30,17 +30,17 @@ describe( 'Event Emitter', ()=> {
 		});
 		it( 'Single event, multiple callbacks', done => {
 			const called = {};
-			let myTrigger1 = new Trigger();
+			let mySequentialEvent1 = new SequentialEvent();
 
-			myTrigger1.on( 'test', data => {
+			mySequentialEvent1.on( 'test', data => {
 				called.test_1 = data;
 			});
-			myTrigger1.on( 'test', data => {
+			mySequentialEvent1.on( 'test', data => {
 				called.test_2 = data;
 			});
 
 			const data = 'hello';
-			myTrigger1.emit( 'test', data ).then(()=> {
+			mySequentialEvent1.emit( 'test', data ).then(()=> {
 				try {
 					expect( called ).to.eql({
 						test_1: data,
@@ -55,18 +55,18 @@ describe( 'Event Emitter', ()=> {
 		it( 'Multiple event, single callback', done => {
 			const called = {};
 
-			let myTrigger1 = new Trigger();
-			myTrigger1.on( 'test_1', data => {
+			let mySequentialEvent1 = new SequentialEvent();
+			mySequentialEvent1.on( 'test_1', data => {
 				called.test_1 = data;
 			});
-			myTrigger1.on( 'test_2', data => {
+			mySequentialEvent1.on( 'test_2', data => {
 				called.test_2 = data;
 			});
 
 			const data = 'hello';
 			Promise.all([
-				myTrigger1.emit( 'test_1', data ),
-				myTrigger1.emit( 'test_2', data ),
+				mySequentialEvent1.emit( 'test_1', data ),
+				mySequentialEvent1.emit( 'test_2', data ),
 			]).then(()=> {
 				try {
 					expect( called ).to.eql({
@@ -83,9 +83,9 @@ describe( 'Event Emitter', ()=> {
 	describe( 'Asynchrone events', ()=> {
 		it( 'Single event, single callback', done => {
 			const called = {};
-			let myTrigger1 = new Trigger();
+			let mySequentialEvent1 = new SequentialEvent();
 
-			myTrigger1.on( 'test', ()=> {
+			mySequentialEvent1.on( 'test', ()=> {
 				return new Promise(( resolve, reject ) => {
 					setTimeout(()=> {
 						try {
@@ -98,7 +98,7 @@ describe( 'Event Emitter', ()=> {
 					}, 100 );
 				});
 			});
-			myTrigger1.emit( 'test' ).then(()=> {
+			mySequentialEvent1.emit( 'test' ).then(()=> {
 				try {
 					expect( called ).to.only.have.property( 'test', true );
 					return done();
@@ -109,9 +109,9 @@ describe( 'Event Emitter', ()=> {
 		});
 		it( 'Single event, multiple callbacks', done => {
 			const called = {};
-			let myTrigger1 = new Trigger();
+			let mySequentialEvent1 = new SequentialEvent();
 
-			myTrigger1.on( 'test', data => {
+			mySequentialEvent1.on( 'test', data => {
 				return new Promise(( resolve, reject ) => {
 					setTimeout(()=> {
 						try {
@@ -124,7 +124,7 @@ describe( 'Event Emitter', ()=> {
 					}, 200 );
 				});
 			});
-			myTrigger1.on( 'test', data => {
+			mySequentialEvent1.on( 'test', data => {
 				return new Promise(( resolve, reject ) => {
 					setTimeout(()=> {
 						try {
@@ -141,7 +141,7 @@ describe( 'Event Emitter', ()=> {
 			});
 
 			const data = 'hello';
-			myTrigger1.emit( 'test', data ).then(()=> {
+			mySequentialEvent1.emit( 'test', data ).then(()=> {
 				try {
 					expect( called ).to.eql({
 						test_1: data,
@@ -158,4 +158,4 @@ describe( 'Event Emitter', ()=> {
 	});
 });
 
-//console.log(, myTrigger1.on, myTrigger1.emit);
+//console.log(, mySequentialEvent1.on, mySequentialEvent1.emit);

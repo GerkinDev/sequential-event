@@ -24,7 +24,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       g = self;
     } else {
       g = this;
-    }g.Trigger = f();
+    }g.SequentialEvent = f();
   }
 })(function () {
   var define, module, exports;return function e(t, n, r) {
@@ -44,7 +44,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         'use strict';
 
         /**
-         * @file File defining the Trigger class
+         * @file File defining the SequentialEvent class
          * @licence GPLv3
          * @author Gerkin
          */
@@ -115,29 +115,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * @extends EventEmitter
          */
 
-        var Trigger = function (_EventEmitter) {
-          _inherits(Trigger, _EventEmitter);
+        var SequentialEvent = function (_EventEmitter) {
+          _inherits(SequentialEvent, _EventEmitter);
 
           /**
-           * Constructs a new Trigger
+           * Constructs a new SequentialEvent
            * @author Gerkin
            */
-          function Trigger() {
-            _classCallCheck(this, Trigger);
+          function SequentialEvent() {
+            _classCallCheck(this, SequentialEvent);
 
-            return _possibleConstructorReturn(this, (Trigger.__proto__ || Object.getPrototypeOf(Trigger)).call(this));
+            return _possibleConstructorReturn(this, (SequentialEvent.__proto__ || Object.getPrototypeOf(SequentialEvent)).call(this));
           }
 
           /**
-           * Triggers each corresponding handlers in sequence
-           * @param   {Any}				type		Name of the event to trigger
+           * SequentialEvents each corresponding handlers in sequence
+           * @param   {Any}				type		Name of the event to sequential-event
            * @param   {Any[]}				[args...]	Parameters to pass to handlers
            * @returns	{boolean|Promise}	false if no handlers found or an error occured. Otherwise, returns a Promise resolved when then chain is done
            * @author Gerkin
            */
 
 
-          _createClass(Trigger, [{
+          _createClass(SequentialEvent, [{
             key: "emit",
             value: function emit(type) {
               for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -204,10 +204,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             }
           }]);
 
-          return Trigger;
+          return SequentialEvent;
         }(EventEmitter);
 
-        module.exports = Trigger;
+        module.exports = SequentialEvent;
       }).call(this, require('_process'));
     }, { "_process": 3, "events": 2 }], 2: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
@@ -667,4 +667,4 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       };
     }, {}] }, {}, [1])(1);
 });
-//# sourceMappingURL=trigger.js.map
+//# sourceMappingURL=sequential-event.js.map

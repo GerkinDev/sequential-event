@@ -1,1 +1,1 @@
-module.exports = require('./lib/trigger.js');
+module.exports = require('./lib/sequential-event.js');

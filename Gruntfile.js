@@ -86,11 +86,11 @@ module.exports = function gruntInit( grunt ) {
 		},
 		browserify: {
 			dist: {
-				src:     [ 'lib/trigger.js' ],
-				dest:    'dist/trigger.js',
+				src:     [ 'lib/sequential-event.js' ],
+				dest:    'dist/sequential-event.js',
 				options: {
 					browserifyOptions: {
-						standalone: 'Trigger',
+						standalone: 'SequentialEvent',
 					},
 				},
 			},
