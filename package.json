@@ -1,6 +1,6 @@
 {
 	"name": "sequential-event",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return **Promises** if it executes asynchronous code",
 	"main": "index.js",
 	"scripts": {
