@@ -34,7 +34,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Nihilivin/https://github.com/Nihilivin/SequentialEvent.js.git"
+		"url": "git+https://github.com/Nihilivin/SequentialEvent.js.git"
 	},
 	"keywords": [
 		"Promise",
@@ -42,7 +42,7 @@
 		"Control-Flow"
 	],
 	"bugs": {
-		"url": "https://github.com/Nihilivin/https://github.com/Nihilivin/SequentialEvent.js/issues"
+		"url": "https://github.com/Nihilivin/SequentialEvent.js/issues"
 	},
-	"homepage": "https://nihilivin.github.io/https://github.com/Nihilivin/SequentialEvent.js/"
+	"homepage": "https://nihilivin.github.io/SequentialEvent.js/"
 }

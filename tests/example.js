@@ -1,14 +1,3 @@
-# SequentialEvent.js
-
-> See the documentation on [github.io/SequentialEvent.js](https://nihilivin.github.io/SequentialEvent.js/)
-
-This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return **Promises** if it executes asynchronous code.
-
-For usage in the browser, use the files in the `dist` directory
-
-## Example usage
-
-```javascript
 const SequentialEvent = require( 'sequential-event' );
 
 function sampleTime( startTime ) {
@@ -43,14 +32,3 @@ eventEmitter
 	// Log normaly if everything is OK, or log with error
 	.then( timers => console.log( timers ))
 	.catch( err => console.error( err ));
-```
-
-*Sample output*
-
-> [ 1, 109, 109 ]
-
-## API
-
-The API is based on [Node's EventEmitter](https://nodejs.org/api/events.html). This package provides a re-implementation of the `emit` method.
-
-See the [Node EventEmitter](https://nodejs.org/api/events.html) for methods documentation

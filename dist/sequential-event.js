@@ -71,19 +71,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             var sourcePromise = new Promise(function (resolve, reject) {
               /**
                * Generate next promise for sequence
-               * @returns {undefined}
+               * @param	{Any}	prevResolve	Previous event chain resolved value
+               * @returns	{undefined}
                * @author Gerkin
                * @private
                */
-              function getNextPromise() {
+              function getNextPromise(prevResolve) {
                 if (i < handlersLength) {
-                  var newPromise = emitHandler(handlers[i], object, args);
-                  newPromise.then(function () {
-                    return getNextPromise();
-                  }).catch(reject);
+                  var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
+                  var newPromise = emitHandler(handlers[i], object, stepArgs);
+                  newPromise.then(getNextPromise).catch(reject);
                   i++;
                 } else {
-                  return resolve();
+                  return resolve.call(null, prevResolve);
                 }
               }
               getNextPromise();
@@ -102,11 +102,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * @private
          */
         function emitHandler(handler, object, args) {
-          var retVal = handler.apply(object, args);
-          if ('object' === (typeof retVal === "undefined" ? "undefined" : _typeof(retVal)) && Promise === retVal.constructor) {
-            return retVal;
-          } else {
-            return Promise.resolve();
+          try {
+            var retVal = handler.apply(object, args);
+            if ('object' === (typeof retVal === "undefined" ? "undefined" : _typeof(retVal)) && Promise === retVal.constructor) {
+              return retVal;
+            } else {
+              return Promise.resolve(retVal);
+            }
+          } catch (e) {
+            return Promise.reject(e);
           }
         }
 
