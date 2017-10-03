@@ -4,7 +4,7 @@
 
 (() => {
 	// ....
-	if ( 'object' === typeof exports && typeof exports.nodeName !== 'string' ) {
+	if ( 'undefined' === typeof window && 'object' === typeof exports && typeof exports.nodeName !== 'string' ) {
 		global.SequentialEvent = require( '../index' );
 		global.expect = require( 'expect.js' );
 	}

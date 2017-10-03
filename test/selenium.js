@@ -61,7 +61,7 @@ describe( `Test Diaspora in the browser (${ process.env.BROWSER_NAME || 'chrome
 	});
 
 	it( 'Browser testrunner should be OK', () => {
-		return browser.get( getTestPath( 'testrunner.html' )).then(() => {
+		return browser.get( getTestPath( 'browser/testrunner.html' )).then(() => {
 			return browser.findElements(webdriver.By.xpath('//*[@id="mocha-report"]/*'));
 		}).then(reportChildren => {
 			expect(reportChildren).to.have.lengthOf.above(0);

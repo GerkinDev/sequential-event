@@ -83,6 +83,18 @@ module.exports = function gruntInit( grunt ) {
 					ext:    '.js',
 				}],
 			},
+			test: {
+				options: {
+					sourceMap: false,
+				},
+				files: [{
+					expand: true,
+					cwd:    'test',
+					src:    ['index.js'],
+					dest:   'test/browser',
+					ext:    '-es5.js',
+				}],
+			},
 		},
 		browserify: {
 			dist: {
@@ -92,6 +104,13 @@ module.exports = function gruntInit( grunt ) {
 					browserifyOptions: {
 						standalone: 'SequentialEvent',
 					},
+				},
+			},
+			test: {
+				src:     [ 'test/browser/index-es5.js' ],
+				dest:    'test/browser/index.js',
+				options: {
+					exclude: [ './selenium.js', 'expect.js', '../index' ],
 				},
 			},
 		},
@@ -106,19 +125,17 @@ module.exports = function gruntInit( grunt ) {
 
 	require( 'load-grunt-tasks' )( grunt );
 
-	grunt.registerTask(
-		'documentate',
-		[
-			'jsdoc:main',
-		]
-	);
-	grunt.registerTask(
-		'dist',
-		[
-			'eslint:strict',
-			'browserify:dist',
-			'babel:dist',
-			'uglify:dist',
-		]
-	);
+	grunt.registerTask( 'documentate', [
+		'jsdoc:main',
+	]);
+	grunt.registerTask( 'dist', [
+		'eslint:strict',
+		'browserify:dist',
+		'babel:dist',
+		'uglify:dist',
+	]);
+	grunt.registerTask('refreshTests', [
+		'browserify:test',
+		'babel:test',
+	]);
 };
