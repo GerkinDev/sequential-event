@@ -24,7 +24,10 @@
 			if(window.initMochaPhantomJS){
 				initMochaPhantomJS();
 			}
-			mocha.setup('bdd');
+			mocha.setup({
+				ui: 'bdd',
+				globals: ['XPathResult'],
+			});
 		</script>
 		<!-- Mocha initialization end -->
 
