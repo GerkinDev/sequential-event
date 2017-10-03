@@ -57,6 +57,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * @param	{EventEmitter}			object		Objecto call event on
          * @param	{Any[]}					[args]		Arguments to pass to each called function
          * @returns	{Promise}				Promise resolved once each function is executed
+         * @memberof SequentialEvent
          * @author Gerkin
          * @private
          */
@@ -98,13 +99,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
          * @param	{EventEmitter}	object	Object to call event on
          * @param	{Any[]}			[args]	Arguments to pass to each called function
          * @returns	{Promise}		Promise resolved once this function is done
+         * @memberof SequentialEvent
          * @author Gerkin
          * @private
          */
         function emitHandler(handler, object, args) {
           try {
             var retVal = handler.apply(object, args);
-            if ('object' === (typeof retVal === "undefined" ? "undefined" : _typeof(retVal)) && Promise === retVal.constructor) {
+            if ('object' === (typeof retVal === "undefined" ? "undefined" : _typeof(retVal)) && 'function' === typeof retVal.then) {
               return retVal;
             } else {
               return Promise.resolve(retVal);
@@ -191,7 +193,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               var handler = events[type];
 
               if (!handler) {
-                return false;
+                return Promise.resolve();
               }
 
               if ('undefined' !== typeof process && domain && this !== process) {

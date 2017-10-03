@@ -49,8 +49,20 @@ eventEmitter
 
 > [ 1, 109, 109 ]
 
+You can see that each `on` handlers are executed sequentially, after the end of the previous handler.
+
 ## API
 
 The API is based on [Node's EventEmitter](https://nodejs.org/api/events.html). This package provides a re-implementation of the `emit` method.
 
 See the [Node EventEmitter](https://nodejs.org/api/events.html) for methods documentation
+
+## Changelogs
+
+### 0.1.1
+
+Emitting an unknown event now return a Promise resolved immediatly, instead of the boolean `false`.
+
+### 0.1.0
+
+* Initial release.
