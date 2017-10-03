@@ -67,7 +67,7 @@ See the [Node EventEmitter](https://nodejs.org/api/events.html) for methods docu
 
 ### 0.1.1
 
-Emitting an unknown event now return a Promise resolved immediatly, instead of the boolean `false`.
+* Emitting an unknown event now return a Promise resolved immediatly, instead of the boolean `false`.
 
 ### 0.1.0
 

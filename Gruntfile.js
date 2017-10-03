@@ -135,7 +135,7 @@ module.exports = function gruntInit( grunt ) {
 		'uglify:dist',
 	]);
 	grunt.registerTask('refreshTests', [
-		'browserify:test',
 		'babel:test',
+		'browserify:test',
 	]);
 };
