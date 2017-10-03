@@ -47,7 +47,7 @@ describe( `Test Diaspora in the browser (${ process.env.BROWSER_NAME || 'chrome
 			return browser.getSession().then( session => {
 				return saucelabs.updateJob( session.getId(), {
 					passed,
-					name: `Diaspora Browser build on ${ process.env.BROWSER_NAME }`,
+					name: `SequentialEvent Browser build on ${ process.env.BROWSER_NAME }`,
 				});
 			}).catch( e => {
 				console.error( e );
