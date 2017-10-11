@@ -11,7 +11,7 @@ Some status badges:
 SauceLabs Build status:  
 [![Build Status](https://saucelabs.com/browser-matrix/Gerkin.svg)](https://saucelabs.com/beta/builds/2e38b38d6406476aa21af409341fcae5)
 
-> **See the documentation on [github.io/SequentialEvent.js](https://gerkindev.github.io/SequentialEvent.js/)**
+> **See the API documentation on [github.io/SequentialEvent.js](https://gerkindev.github.io/SequentialEvent.js/)**
 
 This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return **Promises** if it executes asynchronous code.
 
@@ -68,6 +68,18 @@ The API is based on [Node's EventEmitter](https://nodejs.org/api/events.html). T
 
 See the [Node EventEmitter](https://nodejs.org/api/events.html) for methods documentation
 
+## Compatibility
+
+This package can run on
+* Node `>=` 6.0.0
+* Browsers:
+  * Edge `>=` 12
+  * Firefox `>=` 18
+  * Chrome `>=` 49
+  * Safari & iOS Safari `>=`10
+  * Chrome for Android `>=` 61
+  * Samsung Internet `>=` 5
+  
 ## Changelogs
 
 ### 0.1.1
