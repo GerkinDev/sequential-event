@@ -25,12 +25,6 @@ matrix:
       env: NO_SAUCE=true
     - node_js: "6"
       env: NO_SAUCE=true
-    - node_js: "5"
-      env: NO_SAUCE=true
-    - node_js: "4"
-      env: NO_SAUCE=true
-    - node_js: "3"
-      env: NO_SAUCE=true
 env: 
   global:
     - CC_TEST_REPORTER_ID=44a8b1ae86577092040904da4ac5c76afd29648333c2ad4039e7622a90800745
