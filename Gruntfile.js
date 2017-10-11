@@ -72,7 +72,12 @@ module.exports = function gruntInit( grunt ) {
 		babel: {
 			options: {
 				sourceMap: true,
-				presets:   [ 'es2015' ],
+				presets:   [[ 'env', {
+					modules: false,
+					targets: {
+						browsers: '>= 1%',
+					},
+				}]],
 			},
 			dist: {
 				files: [{
