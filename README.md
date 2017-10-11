@@ -3,6 +3,10 @@
 Some status badges:  
 [![Build Status](https://travis-ci.org/GerkinDev/SequentialEvent.js.svg?branch=master)](https://travis-ci.org/GerkinDev/SequentialEvent.js)
 [![Dependency Status](https://gemnasium.com/badges/github.com/GerkinDev/SequentialEvent.js.svg)](https://gemnasium.com/github.com/GerkinDev/SequentialEvent.js)
+[![npm](https://img.shields.io/npm/dm/sequential-event.svg)](https://npmjs.org/package/sequential-event)
+[![npm version](https://badge.fury.io/js/sequential-event.svg)](https://badge.fury.io/js/sequential-event)
+[![license](https://img.shields.io/github/license/GerkinDev/SequentialEvent.js.svg)](https://github.com/GerkinDev/SequentialEvent.js)    
+
 
 SauceLabs Build status:  
 [![Build Status](https://saucelabs.com/browser-matrix/Gerkin.svg)](https://saucelabs.com/beta/builds/2e38b38d6406476aa21af409341fcae5)

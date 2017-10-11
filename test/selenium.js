@@ -29,7 +29,7 @@ describe( `Test Diaspora in the browser (${ process.env.BROWSER_NAME || 'chrome
 				.usingServer( `http://${  process.env.SAUCE_USERNAME  }:${  process.env.SAUCE_ACCESS_KEY  }@ondemand.saucelabs.com:80/wd/hub` )
 				.withCapabilities({
 					'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-					build:               process.env.TRAVIS_BUILD_NUMBER,
+					build:               `SequentialEvent n°${ process.env.TRAVIS_BUILD_NUMBER }`,
 					username:            process.env.SAUCE_USERNAME,
 					accessKey:           process.env.SAUCE_ACCESS_KEY,
 					browserName:         process.env.BROWSER_NAME,
