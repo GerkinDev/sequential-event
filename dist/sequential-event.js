@@ -1,5 +1,3 @@
-"use strict";
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -52,11 +50,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         var EventEmitter = require('events').EventEmitter;
 
         /**
-         * Handle execution of all handlers in sequence
-         * @param	{Function|Function[]}	handlers	Function(s) to execute. Each function may return a Promise
-         * @param	{EventEmitter}			object		Objecto call event on
-         * @param	{Any[]}					[args]		Arguments to pass to each called function
-         * @returns	{Promise}				Promise resolved once each function is executed
+         * Handle execution of all handlers in sequence.
+         * 
+         * @param   {Function|Function[]} handlers - Function(s) to execute. Each function may return a Promise.
+         * @param   {EventEmitter}        object   - Objecto call event on.
+         * @param   {Any[]}               [args]   - Arguments to pass to each called function.
+         * @returns {Promise} Promise resolved once each function is executed.
          * @memberof SequentialEvent
          * @author Gerkin
          * @private
@@ -71,11 +70,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
             var sourcePromise = new Promise(function (resolve, reject) {
               /**
-               * Generate next promise for sequence
-               * @param	{Any}	prevResolve	Previous event chain resolved value
-               * @returns	{undefined}
+               * Generate next promise for sequence.
+               * 
+               * @param   {Any} prevResolve - Event chain resolved value.
+               * @returns {undefined} *This function does not return anything*.
+               * @memberof SequentialEvent
                * @author Gerkin
-               * @private
+               * @inner
                */
               function getNextPromise(prevResolve) {
                 if (i < handlersLength) {
@@ -94,11 +95,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
 
         /**
-         * Handle execution of a single handler
-         * @param	{Function}		handler	Function to execute. It may return a Promise
-         * @param	{EventEmitter}	object	Object to call event on
-         * @param	{Any[]}			[args]	Arguments to pass to each called function
-         * @returns	{Promise}		Promise resolved once this function is done
+         * Handle execution of a single handler.
+         * 
+         * @param   {Function}     handler - Function to execute. It may return a Promise.
+         * @param   {EventEmitter} object  - Object to call event on.
+         * @param   {Any[]}        [args]  - Arguments to pass to each called function.
+         * @returns {Promise} Promise resolved once this function is done.
          * @memberof SequentialEvent
          * @author Gerkin
          * @private
@@ -117,16 +119,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
 
         /**
-         * @classdesc Event emitter that guarantees sequential execution of handlers. Each handler may return a **Promise**
+         * Event emitter that guarantees sequential execution of handlers. Each handler may return a **Promise**.
+         * 
          * @extends EventEmitter
-         * @see {@link https://nodejs.org/api/events.html Node EventEmitter}
+         * @see {@link https://nodejs.org/api/events.html Node EventEmitter}.
          */
 
         var SequentialEvent = function (_EventEmitter) {
           _inherits(SequentialEvent, _EventEmitter);
 
           /**
-           * Constructs a new SequentialEvent
+           * Constructs a new SequentialEvent.
+           * 
            * @author Gerkin
            */
           function SequentialEvent() {
@@ -136,10 +140,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           }
 
           /**
-           * SequentialEvents each corresponding handlers in sequence
-           * @param   {Any}				type		Name of the event to sequential-event
-           * @param   {Any[]}				[args...]	Parameters to pass to handlers
-           * @returns	{boolean|Promise}	false if no handlers found or an error occured. Otherwise, returns a Promise resolved when then chain is done
+           * SequentialEvents each corresponding handlers in sequence.
+           * 
+           * @param   {Any}   type   - Name of the event to sequential-event.
+           * @param   {Any[]} [args] - Parameters to pass to handlers.
+           * @returns {Promise} Returns a Promise resolved when then chain is done.
            * @author Gerkin
            */
 

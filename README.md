@@ -1,12 +1,13 @@
 # SequentialEvent.js
 
-Travis Build status:  
+Some status badges:  
 [![Build Status](https://travis-ci.org/GerkinDev/SequentialEvent.js.svg?branch=master)](https://travis-ci.org/GerkinDev/SequentialEvent.js)
+[![Dependency Status](https://gemnasium.com/badges/github.com/GerkinDev/SequentialEvent.js.svg)](https://gemnasium.com/github.com/GerkinDev/SequentialEvent.js)
 
 SauceLabs Build status:  
 [![Build Status](https://saucelabs.com/browser-matrix/Gerkin.svg)](https://saucelabs.com/beta/builds/2e38b38d6406476aa21af409341fcae5)
 
-> See the documentation on [github.io/SequentialEvent.js](https://nihilivin.github.io/SequentialEvent.js/)
+> **See the documentation on [github.io/SequentialEvent.js](https://gerkindev.github.io/SequentialEvent.js/)**
 
 This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return **Promises** if it executes asynchronous code.
 

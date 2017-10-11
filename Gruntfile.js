@@ -89,13 +89,13 @@ module.exports = function gruntInit( grunt ) {
 				}],
 			},
 			test: {
-				options: {
+				options: {
 					sourceMap: false,
 				},
 				files: [{
 					expand: true,
 					cwd:    'test',
-					src:    ['index.js'],
+					src:    [ 'index.js' ],
 					dest:   'test/browser',
 					ext:    '-es5.js',
 				}],
@@ -139,7 +139,7 @@ module.exports = function gruntInit( grunt ) {
 		'babel:dist',
 		'uglify:dist',
 	]);
-	grunt.registerTask('refreshTests', [
+	grunt.registerTask( 'refreshTests', [
 		'babel:test',
 		'browserify:test',
 	]);

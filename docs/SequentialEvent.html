@@ -74,7 +74,7 @@
         SequentialEvent
         </h2>
         
-            <div class="class-description"><p>Event emitter that guarantees sequential execution of handlers. Each handler may return a <strong>Promise</strong></p></div>
+            <div class="class-description"><p>Event emitter that guarantees sequential execution of handlers. Each handler may return a <strong>Promise</strong>.</p></div>
         
     
 </header>
@@ -94,7 +94,7 @@
 
     
     <div class="description">
-        <p>Constructs a new SequentialEvent</p>
+        <p>Constructs a new SequentialEvent.</p>
     </div>
     
 
@@ -143,7 +143,7 @@
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://nodejs.org/api/events.html">Node EventEmitter</a></li>
+			<li><a href="https://nodejs.org/api/events.html">Node EventEmitter</a>.</li>
 			</ul>
 	</dd>
 	
@@ -208,7 +208,7 @@
 
     
     <div class="description">
-        <p>Handle execution of a single handler</p>
+        <p>Handle execution of a single handler.</p>
     </div>
     
 
@@ -270,7 +270,7 @@
 
             
 
-            <td class="description last"><p>Function to execute. It may return a Promise</p></td>
+            <td class="description last"><p>Function to execute. It may return a Promise.</p></td>
         </tr>
 
     
@@ -302,7 +302,7 @@
 
             
 
-            <td class="description last"><p>Object to call event on</p></td>
+            <td class="description last"><p>Object to call event on.</p></td>
         </tr>
 
     
@@ -336,7 +336,7 @@
 
             
 
-            <td class="description last"><p>Arguments to pass to each called function</p></td>
+            <td class="description last"><p>Arguments to pass to each called function.</p></td>
         </tr>
 
     
@@ -407,7 +407,7 @@
     
             
 <div class="param-desc">
-    <p>Promise resolved once this function is done</p>
+    <p>Promise resolved once this function is done.</p>
 </div>
 
 
@@ -443,7 +443,7 @@
 
     
     <div class="description">
-        <p>Handle execution of all handlers in sequence</p>
+        <p>Handle execution of all handlers in sequence.</p>
     </div>
     
 
@@ -508,7 +508,7 @@
 
             
 
-            <td class="description last"><p>Function(s) to execute. Each function may return a Promise</p></td>
+            <td class="description last"><p>Function(s) to execute. Each function may return a Promise.</p></td>
         </tr>
 
     
@@ -540,7 +540,7 @@
 
             
 
-            <td class="description last"><p>Objecto call event on</p></td>
+            <td class="description last"><p>Objecto call event on.</p></td>
         </tr>
 
     
@@ -574,7 +574,7 @@
 
             
 
-            <td class="description last"><p>Arguments to pass to each called function</p></td>
+            <td class="description last"><p>Arguments to pass to each called function.</p></td>
         </tr>
 
     
@@ -645,7 +645,7 @@
     
             
 <div class="param-desc">
-    <p>Promise resolved once each function is executed</p>
+    <p>Promise resolved once each function is executed.</p>
 </div>
 
 
@@ -673,7 +673,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="emit"><span class="type-signature"></span>emit(type)</h4>
+    <h4 class="name" id="emit"><span class="type-signature"></span>emit(type [, args])</h4>
     
     
 </dt>
@@ -681,7 +681,7 @@
 
     
     <div class="description">
-        <p>SequentialEvents each corresponding handlers in sequence</p>
+        <p>SequentialEvents each corresponding handlers in sequence.</p>
     </div>
     
 
@@ -743,14 +743,14 @@
 
             
 
-            <td class="description last"><p>Name of the event to sequential-event</p></td>
+            <td class="description last"><p>Name of the event to sequential-event.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>args...</code></td>
+                <td class="name"><code>args</code></td>
             
 
             <td class="type">
@@ -772,12 +772,14 @@
                 
 
                 
+                    &lt;repeatable><br>
+                
                 </td>
             
 
             
 
-            <td class="description last"><p>Parameters to pass to handlers</p></td>
+            <td class="description last"><p>Parameters to pass to handlers.</p></td>
         </tr>
 
     
@@ -848,7 +850,7 @@
     
             
 <div class="param-desc">
-    <p>false if no handlers found or an error occured. Otherwise, returns a Promise resolved when then chain is done</p>
+    <p>Returns a Promise resolved when then chain is done.</p>
 </div>
 
 
@@ -859,10 +861,166 @@
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
-|
-
 <span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~getNextPromise"><span class="type-signature">&lt;inner> </span>getNextPromise(prevResolve)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Generate next promise for sequence.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>prevResolve</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Event chain resolved value.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+	<dt class="tag-author method-doc-label method-doc-details-label">Author:</dt>
+	<dd class="tag-author">
+		<ul>
+			<li>Gerkin</li>
+			</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p><em>This function does not return anything</em>.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
 
 
 
@@ -923,9 +1081,9 @@
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2017-10-03T13:26:10+02:00
+		on 2017-10-12T00:19:57+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
