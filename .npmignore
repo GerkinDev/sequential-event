@@ -3,3 +3,4 @@ Gruntfile.js
 eslint-es6.json
 .travis.yml
 jsdoc.json
+npm-shrinkwrap.json

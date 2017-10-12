@@ -35,15 +35,28 @@ notifications:
     rooms:
       - altenter-project:Pc8sMyCuHNPBCg1TOw0weD9S#tech
 before_script:
-  - python -m SimpleHTTPServer &
-  - sleep 2
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - |
+    if [ $SAUCE_ONLY == "true" ]; then
+        python -m SimpleHTTPServer &
+        sleep 2
+    else
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+    fi
 script:
-  - npm run test-coverage
+  - |
+    if [ $SAUCE_ONLY == "true" ]; then
+        npm run test
+    else
+        npm run test-coverage
+    fi
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - |
+    if [ $SAUCE_ONLY == "true" ]; then
+    else
+        ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+    fi
 cache:
   directories:
     - "node_modules"
