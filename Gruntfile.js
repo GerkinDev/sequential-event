@@ -24,7 +24,9 @@ module.exports = function gruntInit( grunt ) {
 		pkg:    grunt.file.readJSON( 'package.json' ),
 		uglify: {
 			options: {
-				preserveComments: 'some',
+				output: {
+					comments: 'some',
+				},
 			},
 			dist: {
 				options: {
@@ -79,7 +81,20 @@ module.exports = function gruntInit( grunt ) {
 			},
 			dist: {
 				options: {
-					banner: '/*! <%= pkg.name %> build on <%= grunt.template.today("yyyy-mm-dd hh:MM:ss") %> for v<%= pkg.version %> */',
+					plugins: [
+						[ '@comandeer/babel-plugin-banner', {
+							banner: `/**
+* @file <%= pkg.name %>
+* 
+* <%= pkg.description %>
+* Built on <%= grunt.template.today("yyyy-mm-dd hh:MM:ss") %>
+*
+* @license <%= pkg.license %>
+* @version <%= pkg.version %>
+* @author <%= pkg.author %>
+*/`,
+						}],
+					],
 				},
 				files: [{
 					expand: true,

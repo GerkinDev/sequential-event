@@ -24,6 +24,7 @@
 	"author": "Gerkin",
 	"license": "GPL-3.0",
 	"devDependencies": {
+		"@comandeer/babel-plugin-banner": "^1.0.0",
 		"babel-core": "^6.26.0",
 		"babel-preset-env": "^1.6.0",
 		"chai": "^4.1.2",
