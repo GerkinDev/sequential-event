@@ -5,26 +5,26 @@ matrix:
       addons:
         sauce_connect: true
       env:
-        - SAUCE_ONLY=true
+        - SAUCE=yes
         - BROWSER_NAME=chrome
     - node_js: "node"
       addons:
         sauce_connect: true
       env:
-        - SAUCE_ONLY=true
+        - SAUCE=yes
         - BROWSER_NAME=firefox
     - node_js: "node"
       addons:
         sauce_connect: true
       env:
-        - SAUCE_ONLY=true
+        - SAUCE=yes
         - BROWSER_NAME="internet explorer"
     - node_js: "8"
-      env: NO_SAUCE=true
+      env: SAUCE=no
     - node_js: "7"
-      env: NO_SAUCE=true
+      env: SAUCE=no
     - node_js: "6"
-      env: NO_SAUCE=true
+      env: SAUCE=no
 env: 
   global:
     - CC_TEST_REPORTER_ID=44a8b1ae86577092040904da4ac5c76afd29648333c2ad4039e7622a90800745
@@ -36,7 +36,7 @@ notifications:
       - altenter-project:Pc8sMyCuHNPBCg1TOw0weD9S#tech
 before_script:
   - |
-    if [ $SAUCE_ONLY == "true" ]; then
+    if [ $SAUCE == "yes" ]; then
         python -m SimpleHTTPServer &
         sleep 2
     else
@@ -46,15 +46,14 @@ before_script:
     fi
 script:
   - |
-    if [ $SAUCE_ONLY == "true" ]; then
+    if [ $SAUCE == "yes" ]; then
         npm run test
     else
         npm run test-coverage
     fi
 after_script:
   - |
-    if [ $SAUCE_ONLY == "true" ]; then
-    else
+    if [ $SAUCE == "no" ]; then
         ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
     fi
 cache:

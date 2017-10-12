@@ -10,7 +10,7 @@
 	}
 })();
 
-if ( 'undefined' === typeof process || process.env.SAUCE_ONLY !== 'true' ) {
+if ( 'undefined' === typeof process || process.env.SAUCE === 'no' ) {
 	describe( 'Event Emitter', ()=> {
 		describe( 'Synchrone events', ()=> {
 			it( 'Single event, single callback', () => {
@@ -291,6 +291,6 @@ if ( 'undefined' === typeof process || process.env.SAUCE_ONLY !== 'true' ) {
 	});
 }
 
-if ( 'undefined' !== typeof process && process.env.NO_SAUCE !== 'true' ) {
+if ( 'undefined' !== typeof process && process.env.SAUCE === 'yes' ) {
 	require( './selenium.js' );
 }
