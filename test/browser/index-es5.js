@@ -12,7 +12,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	}
 })();
 
-if ('undefined' === typeof process || process.env.SAUCE_ONLY !== 'true') {
+if (process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 	describe('Event Emitter', function () {
 		describe('Synchrone events', function () {
 			it('Single event, single callback', function () {
@@ -326,6 +326,6 @@ if ('undefined' === typeof process || process.env.SAUCE_ONLY !== 'true') {
 	});
 }
 
-if ('undefined' !== typeof process && process.env.NO_SAUCE !== 'true') {
+if ('undefined' !== typeof process && process.env.SAUCE === 'yes') {
 	require('./selenium.js');
 }

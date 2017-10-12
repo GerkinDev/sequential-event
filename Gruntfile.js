@@ -78,6 +78,9 @@ module.exports = function gruntInit( grunt ) {
 				}]],
 			},
 			dist: {
+				options: {
+					banner: '/*! <%= pkg.name %> build on <%= grunt.template.today("yyyy-mm-dd hh:MM:ss") %> for v<%= pkg.version %> */',
+				},
 				files: [{
 					expand: true,
 					cwd:    'dist',
@@ -104,7 +107,6 @@ module.exports = function gruntInit( grunt ) {
 				src:     [ 'lib/sequential-event.js' ],
 				dest:    'dist/sequential-event.js',
 				options: {
-					banner:    '/*! <%= pkg.name %> build on <%= grunt.template.today("yyyy-mm-dd hh:MM:ss") %> for v<%= pkg.version %> */',
 					browserifyOptions: {
 						standalone: 'SequentialEvent',
 					},
