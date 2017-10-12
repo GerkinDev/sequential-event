@@ -1,0 +1,14 @@
+# sequential-event changelog
+
+## 0.1.2
+
+* Updated dependencies
+* Added code checks with [CodeClimate](https://codeclimate.com/github/GerkinDev/SequentialEvent.js) & dependencies security checks with [Gemnasium](https://gemnasium.com/github.com/GerkinDev/SequentialEvent.js)
+
+## 0.1.1
+
+* Emitting an unknown event now return a Promise resolved immediatly, instead of the boolean `false`.
+
+## 0.1.0
+
+* Initial release.

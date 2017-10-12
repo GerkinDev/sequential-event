@@ -72,20 +72,4 @@ See the [Node EventEmitter](https://nodejs.org/api/events.html) for methods docu
 
 This package can run on
 * Node `>=` 6.0.0
-* Browsers:
-  * Edge `>=` 12
-  * Firefox `>=` 18
-  * Chrome `>=` 49
-  * Safari & iOS Safari `>=`10
-  * Chrome for Android `>=` 61
-  * Samsung Internet `>=` 5
-  
-## Changelogs
-
-### 0.1.1
-
-* Emitting an unknown event now return a Promise resolved immediatly, instead of the boolean `false`.
-
-### 0.1.0
-
-* Initial release.
+* Most modern browsers

@@ -30,7 +30,6 @@ module.exports = function gruntInit( grunt ) {
 				options: {
 					banner:    '/*! <%= pkg.name %> build on <%= grunt.template.today("yyyy-mm-dd hh:MM:ss") %> for v<%= pkg.version %> */',
 					sourceMap: false,
-					footer:    '/**/',
 				},
 				files: [
 					{

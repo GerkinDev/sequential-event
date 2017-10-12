@@ -1,0 +1,12 @@
+rm sequential-event-*.tgz
+
+VERSION=$(node -p -e "require('./package.json').version")
+
+npm pack
+tar -tzf "sequential-event-$VERSION.tgz"
+
+read -p "Are files okay? (y/n) " -n 1 -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+fi
