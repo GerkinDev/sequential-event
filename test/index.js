@@ -10,7 +10,7 @@
 	}
 })();
 
-if ( 'undefined' === typeof process || process.env.SAUCE === 'no' ) {
+if ( process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 	describe( 'Event Emitter', ()=> {
 		describe( 'Synchrone events', ()=> {
 			it( 'Single event, single callback', () => {
