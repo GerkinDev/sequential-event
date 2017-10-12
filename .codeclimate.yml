@@ -1,7 +1,5 @@
 ---
 engines:
-  csslint:
-    enabled: true
   duplication:
     enabled: true
     config:
@@ -13,19 +11,16 @@ engines:
     enabled: true
   nodesecurity:
     enabled: true
-ratings:
-  paths:
-  - "**.css"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
-  - "**.rb"
+  markdownlint:
+    enabled: true
+    exclude_paths:
+    - "!**.md"
 exclude_paths:
-- dist/
-- node_modules/
-- test/
-- docs/
-- Gruntfile.js
+- "dist/"
+- "node_modules/"
+- "test/"
+- "docs/"
+- "Gruntfile.js"
+- "LICENSE"
+- "*.md"
+- "*.json"
