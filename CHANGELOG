@@ -1,5 +1,14 @@
 # sequential-event changelog
 
+## 0.2.0
+
+* Use uEvent instead of Node Event Emitter (fix for node's version dependent behavior)
+
+## 0.1.3
+
+* Cleaned useless files
+* Improved build scripts
+
 ## 0.1.2
 
 * Updated dependencies

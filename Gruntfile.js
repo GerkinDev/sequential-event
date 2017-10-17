@@ -52,7 +52,7 @@ module.exports = function gruntInit( grunt ) {
 			},
 			strict: {
 				options: {
-					configFile: 'eslint-es6.json',
+					configFile: '.eslintrc.json',
 				},
 				src: jsAssets,
 			},
@@ -87,7 +87,7 @@ module.exports = function gruntInit( grunt ) {
 * @file <%= pkg.name %>
 * 
 * <%= pkg.description %>
-* Built on <%= grunt.template.today("yyyy-mm-dd hh:MM:ss") %>
+* Built on <%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %>
 *
 * @license <%= pkg.license %>
 * @version <%= pkg.version %>

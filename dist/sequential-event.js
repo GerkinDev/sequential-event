@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-12 01:19:07
+* Built on 2017-10-17 14:44:14
 *
 * @license GPL-3.0
 * @version 0.1.3
@@ -12,681 +12,480 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 (function (f) {
-  if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
-    module.exports = f();
-  } else if (typeof define === "function" && define.amd) {
-    define([], f);
-  } else {
-    var g;if (typeof window !== "undefined") {
-      g = window;
-    } else if (typeof global !== "undefined") {
-      g = global;
-    } else if (typeof self !== "undefined") {
-      g = self;
+    if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
+        module.exports = f();
+    } else if (typeof define === "function" && define.amd) {
+        define([], f);
     } else {
-      g = this;
-    }g.SequentialEvent = f();
-  }
-})(function () {
-  var define, module, exports;return function e(t, n, r) {
-    function s(o, u) {
-      if (!n[o]) {
-        if (!t[o]) {
-          var a = typeof require == "function" && require;if (!u && a) return a(o, !0);if (i) return i(o, !0);var f = new Error("Cannot find module '" + o + "'");throw f.code = "MODULE_NOT_FOUND", f;
-        }var l = n[o] = { exports: {} };t[o][0].call(l.exports, function (e) {
-          var n = t[o][1][e];return s(n ? n : e);
-        }, l, l.exports, e, t, n, r);
-      }return n[o].exports;
-    }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) {
-      s(r[o]);
-    }return s;
-  }({ 1: [function (require, module, exports) {
-      (function (process) {
-        'use strict';
-
-        /**
-         * @file File defining the SequentialEvent class
-         * @licence GPLv3
-         * @author Gerkin
-         */
-
-        var EventEmitter = require('events').EventEmitter;
-
-        /**
-         * Handle execution of all handlers in sequence.
-         * 
-         * @param   {Function|Function[]} handlers - Function(s) to execute. Each function may return a Promise.
-         * @param   {EventEmitter}        object   - Objecto call event on.
-         * @param   {Any[]}               [args]   - Arguments to pass to each called function.
-         * @returns {Promise} Promise resolved once each function is executed.
-         * @memberof SequentialEvent
-         * @author Gerkin
-         * @private
-         */
-        function emitHandlers(handlers, object, args) {
-          // Check if the provided handler is a single function or an array of functions
-          if ('function' === typeof handlers) {
-            return emitHandler(handlers, object, args);
-          } else {
-            var i = 0;
-            var handlersLength = handlers.length;
-
-            var sourcePromise = new Promise(function (resolve, reject) {
-              /**
-               * Generate next promise for sequence.
-               * 
-               * @param   {Any} prevResolve - Event chain resolved value.
-               * @returns {undefined} *This function does not return anything*.
-               * @memberof SequentialEvent
-               * @author Gerkin
-               * @inner
-               */
-              function getNextPromise(prevResolve) {
-                if (i < handlersLength) {
-                  var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
-                  var newPromise = emitHandler(handlers[i], object, stepArgs);
-                  newPromise.then(getNextPromise).catch(reject);
-                  i++;
-                } else {
-                  return resolve.call(null, prevResolve);
-                }
-              }
-              getNextPromise();
-            });
-            return sourcePromise;
-          }
-        }
-
-        /**
-         * Handle execution of a single handler.
-         * 
-         * @param   {Function}     handler - Function to execute. It may return a Promise.
-         * @param   {EventEmitter} object  - Object to call event on.
-         * @param   {Any[]}        [args]  - Arguments to pass to each called function.
-         * @returns {Promise} Promise resolved once this function is done.
-         * @memberof SequentialEvent
-         * @author Gerkin
-         * @private
-         */
-        function emitHandler(handler, object, args) {
-          try {
-            var retVal = handler.apply(object, args);
-            if ('object' === (typeof retVal === "undefined" ? "undefined" : _typeof(retVal)) && 'function' === typeof retVal.then) {
-              return retVal;
-            } else {
-              return Promise.resolve(retVal);
-            }
-          } catch (e) {
-            return Promise.reject(e);
-          }
-        }
-
-        /**
-         * Event emitter that guarantees sequential execution of handlers. Each handler may return a **Promise**.
-         * 
-         * @extends EventEmitter
-         * @see {@link https://nodejs.org/api/events.html Node EventEmitter}.
-         */
-
-        var SequentialEvent = function (_EventEmitter) {
-          _inherits(SequentialEvent, _EventEmitter);
-
-          /**
-           * Constructs a new SequentialEvent.
-           * 
-           * @author Gerkin
-           */
-          function SequentialEvent() {
-            _classCallCheck(this, SequentialEvent);
-
-            return _possibleConstructorReturn(this, (SequentialEvent.__proto__ || Object.getPrototypeOf(SequentialEvent)).call(this));
-          }
-
-          /**
-           * SequentialEvents each corresponding handlers in sequence.
-           * 
-           * @param   {Any}   type   - Name of the event to sequential-event.
-           * @param   {Any[]} [args] - Parameters to pass to handlers.
-           * @returns {Promise} Returns a Promise resolved when then chain is done.
-           * @author Gerkin
-           */
-
-
-          _createClass(SequentialEvent, [{
-            key: "emit",
-            value: function emit(type) {
-              for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                args[_key - 1] = arguments[_key];
-              }
-
-              var needDomainExit = false;
-              var doError = 'error' === type;
-
-              var events = this._events;
-              if (events) {
-                doError = doError && null == events.error;
-              } else if (!doError) {
-                return false;
-              }
-
-              var domain = this.domain;
-
-              // If there is no 'error' event listener then throw.
-              if (doError) {
-                var er = void 0;
-                if (arguments.length > 1) {
-                  er = arguments[1];
-                }
-                if (domain) {
-                  if (!er) {
-                    er = new Error('Unhandled "error" event');
-                  }
-                  if ('object' === (typeof er === "undefined" ? "undefined" : _typeof(er)) && er !== null) {
-                    er.domainEmitter = this;
-                    er.domain = domain;
-                    er.domainThrown = false;
-                  }
-                  domain.emit('error', er);
-                } else if (er instanceof Error) {
-                  throw er; // Unhandled 'error' event
-                } else {
-                  // At least give some kind of context to the user
-                  var err = new Error("Unhandled \"error\" event. (" + er + ")");
-                  err.context = er;
-                  throw err;
-                }
-                return false;
-              }
-
-              var handler = events[type];
-
-              if (!handler) {
-                return Promise.resolve();
-              }
-
-              if ('undefined' !== typeof process && domain && this !== process) {
-                domain.enter();
-                needDomainExit = true;
-              }
-
-              var retPromise = emitHandlers(handler, this, args);
-
-              if (needDomainExit) {
-                domain.exit();
-              }
-
-              return retPromise;
-            }
-          }]);
-
-          return SequentialEvent;
-        }(EventEmitter);
-
-        module.exports = SequentialEvent;
-      }).call(this, require('_process'));
-    }, { "_process": 3, "events": 2 }], 2: [function (require, module, exports) {
-      // Copyright Joyent, Inc. and other Node contributors.
-      //
-      // Permission is hereby granted, free of charge, to any person obtaining a
-      // copy of this software and associated documentation files (the
-      // "Software"), to deal in the Software without restriction, including
-      // without limitation the rights to use, copy, modify, merge, publish,
-      // distribute, sublicense, and/or sell copies of the Software, and to permit
-      // persons to whom the Software is furnished to do so, subject to the
-      // following conditions:
-      //
-      // The above copyright notice and this permission notice shall be included
-      // in all copies or substantial portions of the Software.
-      //
-      // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-      // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-      // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-      // NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-      // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-      // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-      // USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-      function EventEmitter() {
-        this._events = this._events || {};
-        this._maxListeners = this._maxListeners || undefined;
-      }
-      module.exports = EventEmitter;
-
-      // Backwards-compat with node 0.10.x
-      EventEmitter.EventEmitter = EventEmitter;
-
-      EventEmitter.prototype._events = undefined;
-      EventEmitter.prototype._maxListeners = undefined;
-
-      // By default EventEmitters will print a warning if more than 10 listeners are
-      // added to it. This is a useful default which helps finding memory leaks.
-      EventEmitter.defaultMaxListeners = 10;
-
-      // Obviously not all Emitters should be limited to 10. This function allows
-      // that to be increased. Set to zero for unlimited.
-      EventEmitter.prototype.setMaxListeners = function (n) {
-        if (!isNumber(n) || n < 0 || isNaN(n)) throw TypeError('n must be a positive number');
-        this._maxListeners = n;
-        return this;
-      };
-
-      EventEmitter.prototype.emit = function (type) {
-        var er, handler, len, args, i, listeners;
-
-        if (!this._events) this._events = {};
-
-        // If there is no 'error' event listener then throw.
-        if (type === 'error') {
-          if (!this._events.error || isObject(this._events.error) && !this._events.error.length) {
-            er = arguments[1];
-            if (er instanceof Error) {
-              throw er; // Unhandled 'error' event
-            } else {
-              // At least give some kind of context to the user
-              var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-              err.context = er;
-              throw err;
-            }
-          }
-        }
-
-        handler = this._events[type];
-
-        if (isUndefined(handler)) return false;
-
-        if (isFunction(handler)) {
-          switch (arguments.length) {
-            // fast cases
-            case 1:
-              handler.call(this);
-              break;
-            case 2:
-              handler.call(this, arguments[1]);
-              break;
-            case 3:
-              handler.call(this, arguments[1], arguments[2]);
-              break;
-            // slower
-            default:
-              args = Array.prototype.slice.call(arguments, 1);
-              handler.apply(this, args);
-          }
-        } else if (isObject(handler)) {
-          args = Array.prototype.slice.call(arguments, 1);
-          listeners = handler.slice();
-          len = listeners.length;
-          for (i = 0; i < len; i++) {
-            listeners[i].apply(this, args);
-          }
-        }
-
-        return true;
-      };
-
-      EventEmitter.prototype.addListener = function (type, listener) {
-        var m;
-
-        if (!isFunction(listener)) throw TypeError('listener must be a function');
-
-        if (!this._events) this._events = {};
-
-        // To avoid recursion in the case that type === "newListener"! Before
-        // adding it to the listeners, first emit "newListener".
-        if (this._events.newListener) this.emit('newListener', type, isFunction(listener.listener) ? listener.listener : listener);
-
-        if (!this._events[type])
-          // Optimize the case of one listener. Don't need the extra array object.
-          this._events[type] = listener;else if (isObject(this._events[type]))
-          // If we've already got an array, just append.
-          this._events[type].push(listener);else
-          // Adding the second element, need to change to array.
-          this._events[type] = [this._events[type], listener];
-
-        // Check for listener leak
-        if (isObject(this._events[type]) && !this._events[type].warned) {
-          if (!isUndefined(this._maxListeners)) {
-            m = this._maxListeners;
-          } else {
-            m = EventEmitter.defaultMaxListeners;
-          }
-
-          if (m && m > 0 && this._events[type].length > m) {
-            this._events[type].warned = true;
-            console.error('(node) warning: possible EventEmitter memory ' + 'leak detected. %d listeners added. ' + 'Use emitter.setMaxListeners() to increase limit.', this._events[type].length);
-            if (typeof console.trace === 'function') {
-              // not supported in IE 10
-              console.trace();
-            }
-          }
-        }
-
-        return this;
-      };
-
-      EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-      EventEmitter.prototype.once = function (type, listener) {
-        if (!isFunction(listener)) throw TypeError('listener must be a function');
-
-        var fired = false;
-
-        function g() {
-          this.removeListener(type, g);
-
-          if (!fired) {
-            fired = true;
-            listener.apply(this, arguments);
-          }
-        }
-
-        g.listener = listener;
-        this.on(type, g);
-
-        return this;
-      };
-
-      // emits a 'removeListener' event iff the listener was removed
-      EventEmitter.prototype.removeListener = function (type, listener) {
-        var list, position, length, i;
-
-        if (!isFunction(listener)) throw TypeError('listener must be a function');
-
-        if (!this._events || !this._events[type]) return this;
-
-        list = this._events[type];
-        length = list.length;
-        position = -1;
-
-        if (list === listener || isFunction(list.listener) && list.listener === listener) {
-          delete this._events[type];
-          if (this._events.removeListener) this.emit('removeListener', type, listener);
-        } else if (isObject(list)) {
-          for (i = length; i-- > 0;) {
-            if (list[i] === listener || list[i].listener && list[i].listener === listener) {
-              position = i;
-              break;
-            }
-          }
-
-          if (position < 0) return this;
-
-          if (list.length === 1) {
-            list.length = 0;
-            delete this._events[type];
-          } else {
-            list.splice(position, 1);
-          }
-
-          if (this._events.removeListener) this.emit('removeListener', type, listener);
-        }
-
-        return this;
-      };
-
-      EventEmitter.prototype.removeAllListeners = function (type) {
-        var key, listeners;
-
-        if (!this._events) return this;
-
-        // not listening for removeListener, no need to emit
-        if (!this._events.removeListener) {
-          if (arguments.length === 0) this._events = {};else if (this._events[type]) delete this._events[type];
-          return this;
-        }
-
-        // emit removeListener for all listeners on all events
-        if (arguments.length === 0) {
-          for (key in this._events) {
-            if (key === 'removeListener') continue;
-            this.removeAllListeners(key);
-          }
-          this.removeAllListeners('removeListener');
-          this._events = {};
-          return this;
-        }
-
-        listeners = this._events[type];
-
-        if (isFunction(listeners)) {
-          this.removeListener(type, listeners);
-        } else if (listeners) {
-          // LIFO order
-          while (listeners.length) {
-            this.removeListener(type, listeners[listeners.length - 1]);
-          }
-        }
-        delete this._events[type];
-
-        return this;
-      };
-
-      EventEmitter.prototype.listeners = function (type) {
-        var ret;
-        if (!this._events || !this._events[type]) ret = [];else if (isFunction(this._events[type])) ret = [this._events[type]];else ret = this._events[type].slice();
-        return ret;
-      };
-
-      EventEmitter.prototype.listenerCount = function (type) {
-        if (this._events) {
-          var evlistener = this._events[type];
-
-          if (isFunction(evlistener)) return 1;else if (evlistener) return evlistener.length;
-        }
-        return 0;
-      };
-
-      EventEmitter.listenerCount = function (emitter, type) {
-        return emitter.listenerCount(type);
-      };
-
-      function isFunction(arg) {
-        return typeof arg === 'function';
-      }
-
-      function isNumber(arg) {
-        return typeof arg === 'number';
-      }
-
-      function isObject(arg) {
-        return (typeof arg === "undefined" ? "undefined" : _typeof(arg)) === 'object' && arg !== null;
-      }
-
-      function isUndefined(arg) {
-        return arg === void 0;
-      }
-    }, {}], 3: [function (require, module, exports) {
-      // shim for using process in browser
-      var process = module.exports = {};
-
-      // cached from whatever global is present so that test runners that stub it
-      // don't break things.  But we need to wrap it in a try catch in case it is
-      // wrapped in strict mode code which doesn't define any globals.  It's inside a
-      // function because try/catches deoptimize in certain engines.
-
-      var cachedSetTimeout;
-      var cachedClearTimeout;
-
-      function defaultSetTimout() {
-        throw new Error('setTimeout has not been defined');
-      }
-      function defaultClearTimeout() {
-        throw new Error('clearTimeout has not been defined');
-      }
-      (function () {
-        try {
-          if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-          } else {
-            cachedSetTimeout = defaultSetTimout;
-          }
-        } catch (e) {
-          cachedSetTimeout = defaultSetTimout;
-        }
-        try {
-          if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-          } else {
-            cachedClearTimeout = defaultClearTimeout;
-          }
-        } catch (e) {
-          cachedClearTimeout = defaultClearTimeout;
-        }
-      })();
-      function runTimeout(fun) {
-        if (cachedSetTimeout === setTimeout) {
-          //normal enviroments in sane situations
-          return setTimeout(fun, 0);
-        }
-        // if setTimeout wasn't available but was latter defined
-        if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-          cachedSetTimeout = setTimeout;
-          return setTimeout(fun, 0);
-        }
-        try {
-          // when when somebody has screwed with setTimeout but no I.E. maddness
-          return cachedSetTimeout(fun, 0);
-        } catch (e) {
-          try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-          } catch (e) {
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-          }
-        }
-      }
-      function runClearTimeout(marker) {
-        if (cachedClearTimeout === clearTimeout) {
-          //normal enviroments in sane situations
-          return clearTimeout(marker);
-        }
-        // if clearTimeout wasn't available but was latter defined
-        if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-          cachedClearTimeout = clearTimeout;
-          return clearTimeout(marker);
-        }
-        try {
-          // when when somebody has screwed with setTimeout but no I.E. maddness
-          return cachedClearTimeout(marker);
-        } catch (e) {
-          try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-          } catch (e) {
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-          }
-        }
-      }
-      var queue = [];
-      var draining = false;
-      var currentQueue;
-      var queueIndex = -1;
-
-      function cleanUpNextTick() {
-        if (!draining || !currentQueue) {
-          return;
-        }
-        draining = false;
-        if (currentQueue.length) {
-          queue = currentQueue.concat(queue);
+        var g;if (typeof window !== "undefined") {
+            g = window;
+        } else if (typeof global !== "undefined") {
+            g = global;
+        } else if (typeof self !== "undefined") {
+            g = self;
         } else {
-          queueIndex = -1;
-        }
-        if (queue.length) {
-          drainQueue();
-        }
-      }
+            g = this;
+        }g.SequentialEvent = f();
+    }
+})(function () {
+    var define, module, exports;return function e(t, n, r) {
+        function s(o, u) {
+            if (!n[o]) {
+                if (!t[o]) {
+                    var a = typeof require == "function" && require;if (!u && a) return a(o, !0);if (i) return i(o, !0);var f = new Error("Cannot find module '" + o + "'");throw f.code = "MODULE_NOT_FOUND", f;
+                }var l = n[o] = { exports: {} };t[o][0].call(l.exports, function (e) {
+                    var n = t[o][1][e];return s(n ? n : e);
+                }, l, l.exports, e, t, n, r);
+            }return n[o].exports;
+        }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) {
+            s(r[o]);
+        }return s;
+    }({ 1: [function (require, module, exports) {
+            'use strict';
 
-      function drainQueue() {
-        if (draining) {
-          return;
-        }
-        var timeout = runTimeout(cleanUpNextTick);
-        draining = true;
+            /**
+             * @file File defining the SequentialEvent class
+             * @licence GPLv3
+             * @author Gerkin
+             */
 
-        var len = queue.length;
-        while (len) {
-          currentQueue = queue;
-          queue = [];
-          while (++queueIndex < len) {
-            if (currentQueue) {
-              currentQueue[queueIndex].run();
+            var uEvent = require('uevent');
+
+            /**
+             * Handle execution of all handlers in sequence.
+             *
+             * @param   {Function|Function[]} handlers - Function(s) to execute. Each function may return a Promise.
+             * @param   {EventEmitter}        object   - Objecto call event on.
+             * @param   {Any[]}               [args]   - Arguments to pass to each called function.
+             * @returns {Promise} Promise resolved once each function is executed.
+             * @memberof SequentialEvent
+             * @author Gerkin
+             * @private
+             */
+            function emitHandlers(handlers, object, args) {
+                // Check if the provided handler is a single function or an array of functions
+                if ('function' === typeof handlers) {
+                    return emitHandler(handlers, object, args);
+                } else {
+                    var i = 0;
+                    var handlersLength = handlers.length;
+
+                    var sourcePromise = new Promise(function (resolve, reject) {
+                        /**
+                         * Generate next promise for sequence.
+                         *
+                         * @param   {Any} prevResolve - Event chain resolved value.
+                         * @returns {undefined} *This function does not return anything*.
+                         * @memberof SequentialEvent
+                         * @author Gerkin
+                         * @inner
+                         */
+                        function getNextPromise(prevResolve) {
+                            if (i < handlersLength) {
+                                var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
+                                var newPromise = emitHandler(handlers[i], object, stepArgs);
+                                newPromise.then(getNextPromise).catch(reject);
+                                i++;
+                            } else {
+                                return resolve.call(null, prevResolve);
+                            }
+                        }
+                        getNextPromise();
+                    });
+                    return sourcePromise;
+                }
             }
-          }
-          queueIndex = -1;
-          len = queue.length;
-        }
-        currentQueue = null;
-        draining = false;
-        runClearTimeout(timeout);
-      }
 
-      process.nextTick = function (fun) {
-        var args = new Array(arguments.length - 1);
-        if (arguments.length > 1) {
-          for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-          }
-        }
-        queue.push(new Item(fun, args));
-        if (queue.length === 1 && !draining) {
-          runTimeout(drainQueue);
-        }
-      };
+            /**
+             * Handle execution of a single handler.
+             *
+             * @param   {Function}     handler - Function to execute. It may return a Promise.
+             * @param   {EventEmitter} object  - Object to call event on.
+             * @param   {Any[]}        [args]  - Arguments to pass to each called function.
+             * @returns {Promise} Promise resolved once this function is done.
+             * @memberof SequentialEvent
+             * @author Gerkin
+             * @private
+             */
+            function emitHandler(handler, object, args) {
+                try {
+                    var retVal = handler.apply(object, args);
+                    if ('object' === (typeof retVal === "undefined" ? "undefined" : _typeof(retVal)) && 'function' === typeof retVal.then) {
+                        return retVal;
+                    } else {
+                        return Promise.resolve(retVal);
+                    }
+                } catch (e) {
+                    return Promise.reject(e);
+                }
+            }
 
-      // v8 likes predictible objects
-      function Item(fun, array) {
-        this.fun = fun;
-        this.array = array;
-      }
-      Item.prototype.run = function () {
-        this.fun.apply(null, this.array);
-      };
-      process.title = 'browser';
-      process.browser = true;
-      process.env = {};
-      process.argv = [];
-      process.version = ''; // empty string to avoid regexp issues
-      process.versions = {};
+            /**
+             * Empty class that will be mixed with uEvent
+             *
+             * @author Gerkin
+             * @mixin uEvent
+             */
 
-      function noop() {}
+            var Proto = function Proto() {
+                _classCallCheck(this, Proto);
+            };
 
-      process.on = noop;
-      process.addListener = noop;
-      process.once = noop;
-      process.off = noop;
-      process.removeListener = noop;
-      process.removeAllListeners = noop;
-      process.emit = noop;
-      process.prependListener = noop;
-      process.prependOnceListener = noop;
+            uEvent.mixin(Proto.prototype, {
+                trigger: 'emit'
+            });
 
-      process.listeners = function (name) {
-        return [];
-      };
+            /**
+             * Event emitter that guarantees sequential execution of handlers. Each handler may return a **Promise**.
+             *
+             * @extends uEvent
+             * @see {@link https://nodejs.org/api/events.html Node EventEmitter}.
+             */
 
-      process.binding = function (name) {
-        throw new Error('process.binding is not supported');
-      };
+            var SequentialEvent = function (_Proto) {
+                _inherits(SequentialEvent, _Proto);
 
-      process.cwd = function () {
-        return '/';
-      };
-      process.chdir = function (dir) {
-        throw new Error('process.chdir is not supported');
-      };
-      process.umask = function () {
-        return 0;
-      };
-    }, {}] }, {}, [1])(1);
+                /**
+                 * Constructs a new SequentialEvent.
+                 *
+                 * @author Gerkin
+                 */
+                function SequentialEvent() {
+                    _classCallCheck(this, SequentialEvent);
+
+                    return _possibleConstructorReturn(this, (SequentialEvent.__proto__ || Object.getPrototypeOf(SequentialEvent)).call(this));
+                }
+
+                /**
+                 * SequentialEvents each corresponding handlers in sequence.
+                 *
+                 * @param   {Any}   type   - Name of the event to sequential-event.
+                 * @param   {Any[]} [args] - Parameters to pass to handlers.
+                 * @returns {Promise} Returns a Promise resolved when then chain is done.
+                 * @author Gerkin
+                 */
+
+
+                _createClass(SequentialEvent, [{
+                    key: "emit",
+                    value: function emit(type) {
+                        var events = this.__events;
+                        if (!events) {
+                            return Promise.resolve();
+                        }
+
+                        var handler = events[type];
+
+                        if (!handler) {
+                            return Promise.resolve();
+                        }
+
+                        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                            args[_key - 1] = arguments[_key];
+                        }
+
+                        var retPromise = emitHandlers(handler, this, args);
+
+                        return retPromise;
+                    }
+                }]);
+
+                return SequentialEvent;
+            }(Proto);
+
+            module.exports = SequentialEvent;
+        }, { "uevent": 2 }], 2: [function (require, module, exports) {
+            /*!
+             * uEvent - to make any js object an event emitter
+             * Copyright 2011 Jerome Etienne (http://jetienne.com)
+             * Copyright 2015-2016 Damien "Mistic" Sorel (http://www.strangeplanet.fr)
+             * Licensed under MIT (http://opensource.org/licenses/MIT)
+             */
+
+            (function (root, factory) {
+                if (typeof module !== 'undefined' && module.exports) {
+                    module.exports = factory();
+                } else if (typeof define === 'function' && define.amd) {
+                    define([], factory);
+                } else {
+                    root.uEvent = factory();
+                }
+            })(this, function () {
+                "use strict";
+
+                var returnTrue = function returnTrue() {
+                    return true;
+                };
+                var returnFalse = function returnFalse() {
+                    return false;
+                };
+
+                var uEvent = function uEvent() {};
+
+                /**
+                 * Event object used to stop propagations and prevent default
+                 */
+                uEvent.Event = function (type, args) {
+                    var typeReadOnly = type;
+                    var argsReadonly = args;
+
+                    Object.defineProperties(this, {
+                        'type': {
+                            get: function get() {
+                                return typeReadOnly;
+                            },
+                            set: function set(value) {},
+                            enumerable: true
+                        },
+                        'args': {
+                            get: function get() {
+                                return argsReadonly;
+                            },
+                            set: function set(value) {},
+                            enumerable: true
+                        }
+                    });
+                };
+
+                uEvent.Event.prototype = {
+                    constructor: uEvent.Event,
+
+                    isDefaultPrevented: returnFalse,
+                    isPropagationStopped: returnFalse,
+
+                    preventDefault: function preventDefault() {
+                        this.isDefaultPrevented = returnTrue;
+                    },
+                    stopPropagation: function stopPropagation() {
+                        this.isPropagationStopped = returnTrue;
+                    }
+                };
+
+                uEvent.prototype = {
+                    constructor: uEvent,
+
+                    /**
+                     * Add one or many event handlers
+                     *
+                     *  obj.on('event', callback)
+                     *  obj.on('event', listener) -- listener has an handleEvent method
+                     *  obj.on('event1 event2', callback)
+                     *  obj.on({ event1: callback1, event2: callback2 })
+                     *
+                     * @param {String,Object} events
+                     * @param {Function,optional} callback
+                     * @return {Object} main object
+                     */
+                    on: function on(events, callback) {
+                        this.__events = this.__events || {};
+
+                        if ((typeof events === "undefined" ? "undefined" : _typeof(events)) === 'object') {
+                            for (var event in events) {
+                                if (events.hasOwnProperty(event)) {
+                                    this.__events[event] = this.__events[event] || [];
+                                    this.__events[event].push(events[event]);
+                                }
+                            }
+                        } else {
+                            events.split(' ').forEach(function (event) {
+                                this.__events[event] = this.__events[event] || [];
+                                this.__events[event].push(callback);
+                            }, this);
+                        }
+
+                        return this;
+                    },
+
+                    /**
+                     * Remove one or many or all event handlers
+                     *
+                     *  obj.off('event')
+                     *  obj.off('event', callback)
+                     *  obj.off('event1 event2')
+                     *  obj.off({ event1: callback1, event2: callback2 })
+                     *  obj.off()
+                     *
+                     * @param {String|Object,optional} events
+                     * @param {Function,optional} callback
+                     * @return {Object} main object
+                     */
+                    off: function off(events, callback) {
+                        this.__events = this.__events || {};
+
+                        if ((typeof events === "undefined" ? "undefined" : _typeof(events)) === 'object') {
+                            for (var event in events) {
+                                if (events.hasOwnProperty(event) && event in this.__events) {
+                                    var index = this.__events[event].indexOf(events[event]);
+                                    if (index !== -1) this.__events[event].splice(index, 1);
+                                }
+                            }
+                        } else if (!!events) {
+                            events.split(' ').forEach(function (event) {
+                                if (event in this.__events) {
+                                    if (callback) {
+                                        var index = this.__events[event].indexOf(callback);
+                                        if (index !== -1) this.__events[event].splice(index, 1);
+                                    } else {
+                                        this.__events[event].length = 0;
+                                    }
+                                }
+                            }, this);
+                        } else {
+                            this.__events = {};
+                        }
+
+                        return this;
+                    },
+
+                    /**
+                     * Add one or many event handlers that will be called only once
+                     * This handlers are only applicable to "trigger", not "change"
+                     *
+                     *  obj.once('event', callback)
+                     *  obj.once('event1 event2', callback)
+                     *  obj.once({ event1: callback1, event2: callback2 })
+                     *
+                     * @param {String|Object} events
+                     * @param {Function,optional} callback
+                     * @return {Object} main object
+                     */
+                    once: function once(events, callback) {
+                        this.__once = this.__once || {};
+
+                        if ((typeof events === "undefined" ? "undefined" : _typeof(events)) === 'object') {
+                            for (var event in events) {
+                                if (events.hasOwnProperty(event)) {
+                                    this.__once[event] = this.__once[event] || [];
+                                    this.__once[event].push(events[event]);
+                                }
+                            }
+                        } else {
+                            events.split(' ').forEach(function (event) {
+                                this.__once[event] = this.__once[event] || [];
+                                this.__once[event].push(callback);
+                            }, this);
+                        }
+
+                        return this;
+                    },
+
+                    /**
+                     * Trigger all handlers for an event
+                     *
+                     * @param {String} event name
+                     * @param {mixed...,optional} arguments
+                     * @return {uEvent.Event}
+                     */
+                    trigger: function trigger(event /* , args... */) {
+                        var args = Array.prototype.slice.call(arguments, 1);
+                        var e = new uEvent.Event(event, args);
+                        var i, l, f;
+
+                        args.push(e);
+
+                        if (this.__events && event in this.__events) {
+                            for (i = 0, l = this.__events[event].length; i < l; i++) {
+                                f = this.__events[event][i];
+                                if ((typeof f === "undefined" ? "undefined" : _typeof(f)) === 'object') {
+                                    f.handleEvent(e);
+                                } else {
+                                    f.apply(this, args);
+                                }
+                                if (e.isPropagationStopped()) {
+                                    return e;
+                                }
+                            }
+                        }
+
+                        if (this.__once && event in this.__once) {
+                            for (i = 0, l = this.__once[event].length; i < l; i++) {
+                                f = this.__once[event][i];
+                                if ((typeof f === "undefined" ? "undefined" : _typeof(f)) === 'object') {
+                                    f.handleEvent(e);
+                                } else {
+                                    f.apply(this, args);
+                                }
+                                if (e.isPropagationStopped()) {
+                                    delete this.__once[event];
+                                    return e;
+                                }
+                            }
+                            delete this.__once[event];
+                        }
+
+                        return e;
+                    },
+
+                    /**
+                     * Trigger all modificators for an event, each handler must return a value
+                     *
+                     * @param {String} event name
+                     * @param {mixed} event value
+                     * @param {mixed...,optional} arguments
+                     * @return {mixed} modified value
+                     */
+                    change: function change(event, value /* , args... */) {
+                        var args = Array.prototype.slice.call(arguments, 1);
+                        var e = new uEvent.Event(event, args);
+                        var i, l, f;
+
+                        args.push(e);
+
+                        if (this.__events && event in this.__events) {
+                            for (i = 0, l = this.__events[event].length; i < l; i++) {
+                                args[0] = value;
+                                f = this.__events[event][i];
+                                if ((typeof f === "undefined" ? "undefined" : _typeof(f)) === 'object') {
+                                    value = f.handleEvent(e);
+                                } else {
+                                    value = f.apply(this, args);
+                                }
+                                if (e.isPropagationStopped()) {
+                                    return value;
+                                }
+                            }
+                        }
+
+                        return value;
+                    }
+                };
+
+                /**
+                 * Copy all uEvent functions in the destination object
+                 *
+                 * @param {Object} target, the object which will support uEvent
+                 * @param {Object,optional} names, strings map to rename methods
+                 */
+                uEvent.mixin = function (target, names) {
+                    names = names || {};
+                    target = typeof target === 'function' ? target.prototype : target;
+
+                    ['on', 'off', 'once', 'trigger', 'change'].forEach(function (name) {
+                        var method = names[name] || name;
+                        target[method] = uEvent.prototype[name];
+                    });
+
+                    Object.defineProperties(target, {
+                        '__events': {
+                            value: null,
+                            writable: true
+                        },
+                        '__once': {
+                            value: null,
+                            writable: true
+                        }
+                    });
+                };
+
+                return uEvent;
+            });
+        }, {}] }, {}, [1])(1);
 });
 //# sourceMappingURL=sequential-event.js.map
