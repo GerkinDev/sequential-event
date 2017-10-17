@@ -2,10 +2,10 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-17 17:12:33
+* Built on 2017-10-17 17:14:10
 *
 * @license GPL-3.0
-* @version 0.1.3
+* @version 0.2.0-rc.1
 * @author Gerkin
 */
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
