@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-17 17:14:10
+* Built on 2017-10-17 17:35:22
 *
 * @license GPL-3.0
 * @version 0.2.0-rc.1
@@ -144,6 +144,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      */
 				function SequentialEvent() {
 					_classCallCheck(this, SequentialEvent);
+
+					this.__events = {};
 				}
 
 				/**
@@ -158,7 +160,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				_createClass(SequentialEvent, [{
 					key: "on",
 					value: function on(events, callback) {
-						var _events = this.__events = this.__events || {};
+						var _events = this.__events;
 
 						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
 							for (var event in events) {
@@ -188,7 +190,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}, {
 					key: "off",
 					value: function off(events, callback) {
-						var _events = this.__events = this.__events || {};
+						var _events = this.__events;
 
 						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
 							for (var event in events) {
@@ -232,7 +234,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 					value: function once(events, callback) {
 						var _this = this;
 
-						var _events = this.__events = this.__events || {};
+						var _events = this.__events;
 
 						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
 							for (var event in events) {
@@ -269,7 +271,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 						}
 
 						var handler = events[type];
-
 						if (!handler) {
 							return Promise.resolve();
 						}
