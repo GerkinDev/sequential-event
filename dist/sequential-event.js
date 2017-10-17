@@ -2,10 +2,10 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-17 17:35:22
+* Built on 2017-10-17 18:03:41
 *
 * @license GPL-3.0
-* @version 0.2.0-rc.1
+* @version 0.2.0
 * @author Gerkin
 */
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -61,7 +61,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     * @returns {Promise} Promise resolved once each function is executed.
     * @memberof SequentialEvent
     * @author Gerkin
-    * @private
+    * @inner
     */
 
 			var emitHandlers = function emitHandlers(handlers, object, args) {
@@ -107,7 +107,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     * @returns {Promise} Promise resolved once this function is done.
     * @memberof SequentialEvent
     * @author Gerkin
-    * @private
+    * @inner
     */
 			var emitHandler = function emitHandler(handler, object, args) {
 				try {
@@ -122,10 +122,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}
 			};
 
+			/**
+    * Generate an event handler that deregister itself when executed. This handler will be executed just once.
+    *
+    * @param   {Object}   target    - Event emitter that will use the handler.
+    * @param   {string}   eventName - Name of the event to trigger.
+    * @param   {Function} eventFn   - Handler for the event.
+    * @returns {Function} Function that will be executed only once.
+    * @memberof SequentialEvent
+    * @author Gerkin
+    * @inner
+    */
 			var onceify = function onceify(target, eventName, eventFn) {
+				var called = false;
 				var fn = function fn() {
-					target.off(eventName, fn);
-					return eventFn.apply(undefined, arguments);
+					if (!called) {
+						target.off(eventName, fn);
+						called = true;
+						return eventFn.apply(undefined, arguments);
+					}
 				};
 				return fn;
 			};
