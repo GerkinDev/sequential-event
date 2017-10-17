@@ -289,6 +289,21 @@ if ( process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 			return Promise.resolve();
 		});
 	});
+	it('"once" handlers should be executed only once', () => {
+		const mySequentialEvent = new SequentialEvent();
+
+		let called = 0;
+		mySequentialEvent.once('foo', () => {
+			called++;
+		});
+		mySequentialEvent.emit('foo').then(() => {
+			return mySequentialEvent.emit('foo');
+		}).then(() => {
+			return mySequentialEvent.emit('foo');
+		}).then(() => {
+			expect('called').to.eql(1);
+		});
+	});
 }
 
 if ( 'undefined' !== typeof process && process.env.SAUCE === 'yes' ) {

@@ -2,7 +2,8 @@
 
 ## 0.2.0
 
-* Use uEvent instead of Node Event Emitter (fix for node's version dependent behavior)
+* Rewrite code highly inspired from [uEvent](https://github.com/mistic100/uEvent)
+* *once* add to the same events list than *on*, but deregister event after first call
 
 ## 0.1.3
 

@@ -324,6 +324,21 @@ if (process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 			return Promise.resolve();
 		});
 	});
+	it('"once" handlers should be executed only once', function () {
+		var mySequentialEvent = new SequentialEvent();
+
+		var called = 0;
+		mySequentialEvent.once('foo', function () {
+			called++;
+		});
+		mySequentialEvent.emit('foo').then(function () {
+			return mySequentialEvent.emit('foo');
+		}).then(function () {
+			return mySequentialEvent.emit('foo');
+		}).then(function () {
+			expect('called').to.eql(1);
+		});
+	});
 }
 
 if ('undefined' !== typeof process && process.env.SAUCE === 'yes') {
