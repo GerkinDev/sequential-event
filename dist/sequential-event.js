@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-17 18:03:41
+* Built on 2017-10-19 09:50:12
 *
 * @license GPL-3.0
 * @version 0.2.0
@@ -145,6 +145,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return fn;
 			};
 
+			var removeEventListener = function removeEventListener(eventCat, callback) {
+				var index = eventCat.indexOf(callback);
+				if (index !== -1) {
+					eventCat.splice(index, 1);
+				}
+			};
+
+			var castToEventObject = function castToEventObject(events, callback) {
+				if ('object' !== (typeof events === "undefined" ? "undefined" : _typeof(events))) {
+					var eventsObj = {};
+					events.split(' ').forEach(function (event) {
+						eventsObj[event] = callback;
+					});
+					return eventsObj;
+				} else {
+					return events;
+				}
+			};
+
 			/**
     * Event emitter that guarantees sequential execution of handlers. Each handler may return a **Promise**.
     *
@@ -177,18 +196,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 					value: function on(events, callback) {
 						var _events = this.__events;
 
-						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
-							for (var event in events) {
-								if (events.hasOwnProperty(event)) {
-									_events[event] = _events[event] || [];
-									_events[event].push(events[event]);
-								}
-							}
-						} else {
-							events.split(' ').forEach(function (event) {
+						var eventsObj = castToEventObject(events, callback);
+						for (var event in eventsObj) {
+							if (eventsObj.hasOwnProperty(event)) {
 								_events[event] = _events[event] || [];
-								_events[event].push(callback);
-							}, this);
+								_events[event].push(eventsObj[event]);
+							}
 						}
 
 						return this;
@@ -209,26 +222,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
 							for (var event in events) {
-								if (events.hasOwnProperty(event) && event in _events) {
-									var index = _events[event].indexOf(events[event]);
-									if (index !== -1) {
-										_events[event].splice(index, 1);
-									}
+								if (events.hasOwnProperty(event)) {
+									removeEventListener(_events[event], events[event]);
 								}
 							}
 						} else if (events) {
 							events.split(' ').forEach(function (event) {
-								if (event in _events) {
-									if (callback) {
-										var index = _events[event].indexOf(callback);
-										if (index !== -1) {
-											_events[event].splice(index, 1);
-										}
-									} else {
-										_events[event].length = 0;
-									}
+								if (events.hasOwnProperty(event)) {
+									removeEventListener(_events[event], callback);
+								} else if (events.hasOwnProperty(event)) {
+									_events[event].length = 0;
 								}
-							}, this);
+							});
 						} else {
 							this.__events = {};
 						}
@@ -247,22 +252,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}, {
 					key: "once",
 					value: function once(events, callback) {
-						var _this = this;
-
 						var _events = this.__events;
 
-						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
-							for (var event in events) {
-								if (events.hasOwnProperty(event)) {
-									_events[event] = _events[event] || [];
-									_events[event].push(onceify(this, event, events[event]));
-								}
-							}
-						} else {
-							events.split(' ').forEach(function (event) {
+						var eventsObj = castToEventObject(events, callback);
+						for (var event in eventsObj) {
+							if (eventsObj.hasOwnProperty(event)) {
 								_events[event] = _events[event] || [];
-								_events[event].push(onceify(_this, event, callback));
-							}, this);
+								_events[event].push(onceify(this, event, eventsObj[event]));
+							}
 						}
 
 						return this;

@@ -331,7 +331,7 @@ if (process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 		mySequentialEvent.once('foo', function () {
 			called++;
 		});
-		mySequentialEvent.emit('foo').then(function () {
+		return mySequentialEvent.emit('foo').then(function () {
 			return mySequentialEvent.emit('foo');
 		}).then(function () {
 			return mySequentialEvent.emit('foo');
