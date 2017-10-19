@@ -524,7 +524,7 @@ if (process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 		}).then(function () {
 			return mySequentialEvent.emit('foo');
 		}).then(function () {
-			expect('called').to.eql(1);
+			expect(called, 'Callback should be executed once, but was executed ' + called + ' times').to.eql(1);
 		});
 	});
 }

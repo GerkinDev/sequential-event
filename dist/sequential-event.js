@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-19 09:50:12
+* Built on 2017-10-19 10:07:32
 *
 * @license GPL-3.0
 * @version 0.2.0
@@ -82,7 +82,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        * @author Gerkin
        * @inner
        */
-						function getNextPromise(prevResolve) {
+						var getNextPromise = function getNextPromise(prevResolve) {
 							if (i < handlersLength) {
 								var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
 								var newPromise = emitHandler(handlers[i], object, stepArgs);
@@ -91,7 +91,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 							} else {
 								return resolve.call(null, prevResolve);
 							}
-						}
+						};
 						getNextPromise();
 					});
 					return sourcePromise;
@@ -152,6 +152,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}
 			};
 
+			var addEventListener = function addEventListener(eventHash, event, callback) {
+				eventHash[event] = eventHash[event] || [];
+				eventHash[event].push(callback);
+			};
+
 			var castToEventObject = function castToEventObject(events, callback) {
 				if ('object' !== (typeof events === "undefined" ? "undefined" : _typeof(events))) {
 					var eventsObj = {};
@@ -187,7 +192,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      *
      * @param   {string|Object} events     - Event name or hash of events.
      * @param   {Function}      [callback] - If provided an event name with `events`, function to associate with the event.
-     * @returns {SequentialEvent} `this`.
+     * @returns {SequentialEvent} Returns `this`.
      */
 
 
@@ -199,8 +204,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 						var eventsObj = castToEventObject(events, callback);
 						for (var event in eventsObj) {
 							if (eventsObj.hasOwnProperty(event)) {
-								_events[event] = _events[event] || [];
-								_events[event].push(eventsObj[event]);
+								addEventListener(_events, event, eventsObj[event]);
 							}
 						}
 
@@ -212,7 +216,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       *
       * @param   {string|Object} [events]   - Event name or hash of events.
       * @param   {Function}      [callback] - If provided an event name with `events`, function to associate with the event.
-      * @returns {SequentialEvent} `this`.
+      * @returns {SequentialEvent} Returns `this`.
       */
 
 				}, {
@@ -228,9 +232,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 							}
 						} else if (events) {
 							events.split(' ').forEach(function (event) {
-								if (events.hasOwnProperty(event)) {
+								if (callback) {
 									removeEventListener(_events[event], callback);
-								} else if (events.hasOwnProperty(event)) {
+								} else {
 									_events[event].length = 0;
 								}
 							});
@@ -246,7 +250,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       *
       * @param   {string|Object} events     - Event name or hash of events.
       * @param   {Function}      [callback] - If provided an event name with `events`, function to associate with the event.
-      * @returns {SequentialEvent} `this`.
+      * @returns {SequentialEvent} Returns `this`.
       */
 
 				}, {
@@ -257,8 +261,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 						var eventsObj = castToEventObject(events, callback);
 						for (var event in eventsObj) {
 							if (eventsObj.hasOwnProperty(event)) {
-								_events[event] = _events[event] || [];
-								_events[event].push(onceify(this, event, eventsObj[event]));
+								addEventListener(_events, event, onceify(this, event, eventsObj[event]));
 							}
 						}
 
