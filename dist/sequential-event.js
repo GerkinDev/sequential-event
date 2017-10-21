@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-19 10:07:32
+* Built on 2017-10-21 17:42:46
 *
 * @license GPL-3.0
 * @version 0.2.0
@@ -77,7 +77,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
        * Generate next promise for sequence.
        *
        * @param   {Any} prevResolve - Event chain resolved value.
-       * @returns {undefined} *This function does not return anything*.
+       * @returns {undefined} This function does not return anything.
        * @memberof SequentialEvent
        * @author Gerkin
        * @inner
@@ -145,6 +145,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				return fn;
 			};
 
+			/**
+    * Remove provided `callback` from listeners of event `eventCat`.
+    *
+    * @param   {Function[]} eventCat   - Array of listeners to remove callback from.
+    * @param   {Function}   [callback] - Callback to remove.
+    * @returns {undefined} This function does not returns anything.
+    * @memberof SequentialEvent
+    * @author Gerkin
+    * @inner
+    */
 			var removeEventListener = function removeEventListener(eventCat, callback) {
 				var index = eventCat.indexOf(callback);
 				if (index !== -1) {
@@ -152,11 +162,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}
 			};
 
-			var addEventListener = function addEventListener(eventHash, event, callback) {
-				eventHash[event] = eventHash[event] || [];
-				eventHash[event].push(callback);
+			/**
+    * Add an event listener to the provided event hash.
+    *
+    * @param   {Object}   eventHash  - Hash of events of the object. It is usually retrieved from `object.__events`
+    * @param   {string}   eventName  - Name of the event to add listener on.
+    * @param   {Function} [callback] - Callback to add.
+    * @returns {undefined} This function does not returns anything.
+    * @memberof SequentialEvent
+    * @author Gerkin
+    * @inner
+    */
+			var addEventListener = function addEventListener(eventHash, eventName, callback) {
+				eventHash[eventName] = eventHash[eventName] || [];
+				eventHash[eventName].push(callback);
 			};
 
+			/**
+    * Ensure that event & callback are on the associative hash format
+    *
+    * @param   {Object<string, Function>|string} events   - Events to cast in hash form
+    * @param   {Function}                        callback - Function to associate with those events.
+    * @returns {Object<string, Function>} Events in hash format.
+    * @memberof SequentialEvent
+    * @author Gerkin
+    * @inner
+    */
 			var castToEventObject = function castToEventObject(events, callback) {
 				if ('object' !== (typeof events === "undefined" ? "undefined" : _typeof(events))) {
 					var eventsObj = {};
@@ -188,27 +219,35 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}
 
 				/**
-     * Add one or many event handlers.
+     * Triggers each corresponding handlers in sequence.
      *
-     * @param   {string|Object} events     - Event name or hash of events.
-     * @param   {Function}      [callback] - If provided an event name with `events`, function to associate with the event.
-     * @returns {SequentialEvent} Returns `this`.
+     * @param   {Any}   type   - Name of the event to sequential-event.
+     * @param   {Any[]} [args] - Parameters to pass to handlers.
+     * @returns {Promise} Returns a Promise resolved when then chain is done.
+     * @author Gerkin
      */
 
 
 				_createClass(SequentialEvent, [{
-					key: "on",
-					value: function on(events, callback) {
-						var _events = this.__events;
-
-						var eventsObj = castToEventObject(events, callback);
-						for (var event in eventsObj) {
-							if (eventsObj.hasOwnProperty(event)) {
-								addEventListener(_events, event, eventsObj[event]);
-							}
+					key: "emit",
+					value: function emit(type) {
+						var events = this.__events;
+						if (!events) {
+							return Promise.resolve();
 						}
 
-						return this;
+						var handler = events[type];
+						if (!handler) {
+							return Promise.resolve();
+						}
+
+						for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+							args[_key - 1] = arguments[_key];
+						}
+
+						var retPromise = emitHandlers(handler, this, args);
+
+						return retPromise;
 					}
 
 					/**
@@ -224,24 +263,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 					value: function off(events, callback) {
 						var _events = this.__events;
 
-						if ('object' === (typeof events === "undefined" ? "undefined" : _typeof(events))) {
-							for (var event in events) {
-								if (events.hasOwnProperty(event)) {
-									removeEventListener(_events[event], events[event]);
-								}
-							}
-						} else if (events) {
-							events.split(' ').forEach(function (event) {
-								if (callback) {
-									removeEventListener(_events[event], callback);
-								} else {
-									_events[event].length = 0;
-								}
-							});
-						} else {
+						if (!events) {
 							this.__events = {};
+							return this;
 						}
 
+						var eventsObj = castToEventObject(events, callback);
+						for (var event in eventsObj) {
+							if (!eventsObj.hasOwnProperty(event)) {
+								continue;
+							}
+							if (eventsObj[event]) {
+								removeEventListener(_events[event], eventsObj[event]);
+							} else {
+								_events[event] = [];
+							}
+						}
 						return this;
 					}
 
@@ -269,34 +306,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 					}
 
 					/**
-      * Triggers each corresponding handlers in sequence.
+      * Add one or many event handlers.
       *
-      * @param   {Any}   type   - Name of the event to sequential-event.
-      * @param   {Any[]} [args] - Parameters to pass to handlers.
-      * @returns {Promise} Returns a Promise resolved when then chain is done.
-      * @author Gerkin
+      * @param   {string|Object} events     - Event name or hash of events.
+      * @param   {Function}      [callback] - If provided an event name with `events`, function to associate with the event.
+      * @returns {SequentialEvent} Returns `this`.
       */
 
 				}, {
-					key: "emit",
-					value: function emit(type) {
-						var events = this.__events;
-						if (!events) {
-							return Promise.resolve();
+					key: "on",
+					value: function on(events, callback) {
+						var _events = this.__events;
+
+						var eventsObj = castToEventObject(events, callback);
+						for (var event in eventsObj) {
+							if (eventsObj.hasOwnProperty(event)) {
+								addEventListener(_events, event, eventsObj[event]);
+							}
 						}
 
-						var handler = events[type];
-						if (!handler) {
-							return Promise.resolve();
-						}
-
-						for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-							args[_key - 1] = arguments[_key];
-						}
-
-						var retPromise = emitHandlers(handler, this, args);
-
-						return retPromise;
+						return this;
 					}
 				}]);
 
