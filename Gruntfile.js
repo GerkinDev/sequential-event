@@ -147,11 +147,14 @@ module.exports = function gruntInit( grunt ) {
 
 	require( 'load-grunt-tasks' )( grunt );
 
+	grunt.registerTask( 'lint', [
+		'eslint:strict',
+	]);
 	grunt.registerTask( 'documentate', [
 		'jsdoc:main',
 	]);
 	grunt.registerTask( 'dist', [
-		'eslint:strict',
+		'lint',
 		'browserify:dist',
 		'babel:dist',
 		'uglify:dist',
