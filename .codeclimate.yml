@@ -22,6 +22,11 @@ checks:
     config:
       threshold: 10
 exclude_patterns:
-- "./*"
-- "!lib/**/*"
-- "!index.js"
+- "dist/"
+- "node_modules/"
+- "test/"
+- "docs/"
+- "Gruntfile.js"
+- "LICENSE"
+- "*.md"
+- "*.json"
