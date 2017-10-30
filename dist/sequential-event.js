@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-30 23:02:09
+* Built on 2017-10-30 23:18:31
 *
 * @license GPL-3.0
 * @version 0.3.0
@@ -171,9 +171,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     * @inner
     */
 			var removeEventListener = function removeEventListener(eventCat, callback) {
-				var indexes = [eventCat.indexOf(callback), eventCat.findIndex(function (elem) {
-					return elem.origFn === callback;
-				})];
+				var indexes = [eventCat.indexOf(callback), function () {
+					var I = eventCat.length;
+					for (var i = 0; i < I; i++) {
+						if (eventCat[i].origFn === callback) {
+							return i;
+						}
+					}
+					return -1;
+				}()];
 				var index = Math.min.apply(Math, _toConsumableArray(indexes.filter(function (v) {
 					return v >= 0;
 				})));

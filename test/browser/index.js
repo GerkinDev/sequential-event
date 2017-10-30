@@ -565,7 +565,10 @@ if (process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 		mySequentialEvent.on('bar', function () {
 			called++;
 		});
-		var events = Object.assign({}, mySequentialEvent.__events);
+		var events = {};
+		for (var eventCat in mySequentialEvent.__events) {
+			events[eventCat] = mySequentialEvent.__events[eventCat];
+		}
 		mySequentialEvent.off('foo');
 		return mySequentialEvent.emit('foo').then(function () {
 			return mySequentialEvent.emit('bar');
