@@ -30,3 +30,5 @@ exclude_patterns:
 - "LICENSE"
 - "*.md"
 - "*.json"
+- "CHANGELOG"
+- "script/"
