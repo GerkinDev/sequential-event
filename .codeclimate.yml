@@ -1,5 +1,6 @@
 ---
-engines:
+version: "2"
+plugins:
   duplication:
     enabled: true
     config:
@@ -14,7 +15,7 @@ engines:
     enabled: true
   markdownlint:
     enabled: true
-    exclude_paths:
+    exclude_patterns:
     - "!**.md"
 checks:
   method-complexity:
