@@ -342,7 +342,10 @@ if ( process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 		mySequentialEvent.on('bar', () => {
 			called++;
 		});
-		const events = Object.assign({}, mySequentialEvent.__events);
+		const events = {};
+		for(const eventCat in mySequentialEvent.__events){
+			events[eventCat] = mySequentialEvent.__events[eventCat];
+		}
 		mySequentialEvent.off('foo');
 		return mySequentialEvent.emit('foo').then(() => {
 			return mySequentialEvent.emit('bar');
