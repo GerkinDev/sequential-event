@@ -20,7 +20,7 @@ checks:
   method-complexity:
     config:
       threshold: 10
-exclude_paths:
-- "*/"
+exclude_patterns:
+- "**/"
 - "!lib/**/*"
 - "!index.js"
