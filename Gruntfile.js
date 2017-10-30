@@ -12,11 +12,11 @@ module.exports = function gruntInit( grunt ) {
 
 	const baseDocPath = 'docs';
 	const jsLib = [
-		'index.js',
 		'lib/**.js',
 	];
 	const jsLibCwd = jsLib.map( v => path.relative( 'lib', v ));
 	const jsAssets = _.concat([
+		'index.js',
 		'Gruntfile.js',
 		'tests/index.js',
 	], jsLib );

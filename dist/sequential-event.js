@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-30 19:34:29
+* Built on 2017-10-30 19:51:06
 *
 * @license GPL-3.0
 * @version 0.2.0
