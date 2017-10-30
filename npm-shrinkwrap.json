@@ -1,6 +1,6 @@
 {
   "name": "sequential-event",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "dependencies": {
     "@comandeer/babel-plugin-banner": {
       "version": "1.0.0",

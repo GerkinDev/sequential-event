@@ -339,6 +339,178 @@ if (process.env.SAUCE === 'no' || typeof process.env.SAUCE === 'undefined') {
 			expect(called, 'Callback should be executed once, but was executed ' + called + ' times').to.eql(1);
 		});
 	});
+	it('Remove all listeners', function () {
+		var mySequentialEvent = new SequentialEvent();
+
+		mySequentialEvent.on('foo', function () {
+			return Promise.reject('"foo" should not be called');
+		});
+		mySequentialEvent.on('bar', function () {
+			return Promise.reject('"bar" should not be called');
+		});
+		mySequentialEvent.off();
+		return mySequentialEvent.emit('foo').then(function () {
+			return mySequentialEvent.emit('bar');
+		});
+	});
+	it('Remove listeners on single event', function () {
+		var mySequentialEvent = new SequentialEvent();
+
+		var called = 0;
+		mySequentialEvent.on('foo', function () {
+			return Promise.reject('"foo" should not be called');
+		});
+		mySequentialEvent.on('bar', function () {
+			called++;
+		});
+		mySequentialEvent.off('foo');
+		return mySequentialEvent.emit('foo').then(function () {
+			return mySequentialEvent.emit('bar');
+		}).then(function () {
+			expect(called, '"bar" should be executed once, but was executed ' + called + ' times').to.eql(1);
+		});
+	});
+	it('Remove listeners on single non existent event', function () {
+		var mySequentialEvent = new SequentialEvent();
+
+		var called = 0;
+		mySequentialEvent.on('bar', function () {
+			called++;
+		});
+		var events = Object.assign({}, mySequentialEvent.__events);
+		mySequentialEvent.off('foo');
+		return mySequentialEvent.emit('foo').then(function () {
+			return mySequentialEvent.emit('bar');
+		}).then(function () {
+			expect(called, '"bar" should be executed once, but was executed ' + called + ' times').to.eql(1);
+			for (var i in events) {
+				expect(events[i]).to.be.equal(mySequentialEvent.__events[i]);
+			}
+		});
+	});
+	it('Manually add an event listener', function () {
+		var mySequentialEvent = new SequentialEvent();
+
+		var called = 0;
+		mySequentialEvent.__events.bar = function () {
+			called++;
+		};
+		return mySequentialEvent.emit('bar').then(function () {
+			expect(called, '"bar" should be executed once, but was executed ' + called + ' times').to.eql(1);
+		});
+	});
+	describe('Use Objects to describe events', function () {
+		it('Check "on"', function () {
+			var mySequentialEvent = new SequentialEvent();
+
+			var called = {};
+			mySequentialEvent.on({
+				a: function a() {
+					called.a = true;
+				},
+				b: [function () {
+					called.b1 = true;
+				}, function () {
+					called.b2 = true;
+				}]
+			});
+			return mySequentialEvent.emit('a').then(function () {
+				return mySequentialEvent.emit('b');
+			}).then(function () {
+				expect(called).to.be.eql({
+					a: true,
+					b1: true,
+					b2: true
+				}, 'All callbacks should have been called');
+			});
+		});
+		it('Check "once"', function () {
+			var mySequentialEvent = new SequentialEvent();
+
+			var called = {};
+			mySequentialEvent.once({
+				a: function a() {
+					called.a = true;
+				},
+				b: [function () {
+					called.b1 = true;
+				}, function () {
+					called.b2 = true;
+				}]
+			});
+			return mySequentialEvent.emit('a').then(function () {
+				return mySequentialEvent.emit('b');
+			}).then(function () {
+				expect(called).to.be.eql({
+					a: true,
+					b1: true,
+					b2: true
+				}, 'All callbacks should have been called');
+				expect(mySequentialEvent.__events).to.have.property('a');
+				expect(mySequentialEvent.__events.a).to.be.an('array').and.to.be.empty;
+				expect(mySequentialEvent.__events).to.have.property('b');
+				expect(mySequentialEvent.__events.b).to.be.an('array').and.to.be.empty;
+			});
+		});
+		it('Check "off" with "on"', function () {
+			var mySequentialEvent = new SequentialEvent();
+
+			var called = {};
+			var fcts = {
+				a: function a() {
+					called.a = true;
+				},
+				b: [function () {
+					called.b1 = true;
+				}, function () {
+					called.b2 = true;
+				}]
+			};
+			mySequentialEvent.on(fcts);
+			mySequentialEvent.off({
+				a: fcts.a,
+				b: fcts.b[0]
+			});
+			return mySequentialEvent.emit('a').then(function () {
+				return mySequentialEvent.emit('b');
+			}).then(function () {
+				expect(called).to.be.eql({
+					b2: true
+				}, 'Only callback b2 should have been executed');
+			});
+		});
+		it('Check "off" with "once"', function () {
+			var mySequentialEvent = new SequentialEvent();
+
+			var called = {};
+			var fcts = {
+				a: function a() {
+					called.a = true;
+				},
+				b: [function () {
+					called.b1 = true;
+				}, function () {
+					called.b2 = true;
+				}]
+			};
+			mySequentialEvent.once(fcts);
+			mySequentialEvent.off({
+				a: fcts.a,
+				b: fcts.b[0]
+			});
+			return mySequentialEvent.emit('a').then(function () {
+				return mySequentialEvent.emit('b');
+			}).then(function () {
+				expect(called).to.be.eql({
+					b2: true
+				}, 'Only callback b2 should have been executed');
+				expect(mySequentialEvent.__events).to.have.property('a');
+				expect(mySequentialEvent.__events.a).to.be.an('array').and.to.be.empty;
+				expect(mySequentialEvent.__events).to.have.property('b');
+				expect(mySequentialEvent.__events.b).to.be.an('array').and.to.be.empty;
+			});
+		});
+	});
 }
 
 if ('undefined' !== typeof process && process.env.SAUCE === 'yes') {

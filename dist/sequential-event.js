@@ -2,10 +2,10 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-30 19:51:06
+* Built on 2017-10-30 23:02:09
 *
 * @license GPL-3.0
-* @version 0.2.0
+* @version 0.3.0
 * @author Gerkin
 */
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13,6 +13,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 (function (f) {
 	if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
@@ -88,11 +90,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     */
 
 			var getNextPromise = function getNextPromise(handlers, object, args) {
-				//(resolve, reject) => {
 				var i = 0;
 				var handlersLength = handlers.length;
 				return function (resolve, reject) {
 					var _getNextPromise = function _getNextPromise(prevResolve) {
+						var handlersLength2 = handlers.length;
+						if (handlersLength2 !== handlersLength) {
+							i -= handlersLength - handlersLength2;
+							handlersLength = handlersLength2;
+						}
 						if (i < handlersLength) {
 							var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
 							var newPromise = emitHandler(handlers[i], object, stepArgs);
@@ -143,14 +149,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     */
 			var onceify = function onceify(target, eventName, eventFn) {
 				var called = false;
-				var fn = function fn() {
+				var once = function once() {
 					if (!called) {
-						target.off(eventName, fn);
+						target.off(eventName, once);
 						called = true;
 						return eventFn.apply(undefined, arguments);
 					}
 				};
-				return fn;
+				once.origFn = eventFn;
+				return once;
 			};
 
 			/**
@@ -164,8 +171,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     * @inner
     */
 			var removeEventListener = function removeEventListener(eventCat, callback) {
-				var index = eventCat.indexOf(callback);
-				if (index !== -1) {
+				var indexes = [eventCat.indexOf(callback), eventCat.findIndex(function (elem) {
+					return elem.origFn === callback;
+				})];
+				var index = Math.min.apply(Math, _toConsumableArray(indexes.filter(function (v) {
+					return v >= 0;
+				})));
+				if (isFinite(index)) {
 					eventCat.splice(index, 1);
 				}
 			};
@@ -182,8 +194,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     * @inner
     */
 			var addEventListener = function addEventListener(eventHash, eventName, callback) {
-				eventHash[eventName] = eventHash[eventName] || [];
-				eventHash[eventName].push(callback);
+				eventHash[eventName] = ensureArray(eventHash[eventName]).concat(ensureArray(callback));
 			};
 
 			/**
@@ -206,6 +217,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				} else {
 					return events;
 				}
+			};
+
+			var ensureArray = function ensureArray(data) {
+				if ('undefined' === typeof data) {
+					return [];
+				}
+				return Array === data.constructor ? data : [data];
 			};
 
 			/**
@@ -240,9 +258,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 					key: "emit",
 					value: function emit(type) {
 						var events = this.__events;
-						if (!events) {
-							return Promise.resolve();
-						}
 
 						var handler = events[type];
 						if (!handler) {
@@ -278,13 +293,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 						var eventsObj = castToEventObject(events, callback);
 						for (var event in eventsObj) {
-							if (!eventsObj.hasOwnProperty(event)) {
-								continue;
-							}
-							if (eventsObj[event]) {
-								removeEventListener(_events[event], eventsObj[event]);
-							} else {
-								_events[event] = [];
+							if (eventsObj.hasOwnProperty(event)) {
+								if (eventsObj[event]) {
+									removeEventListener(_events[event], eventsObj[event]);
+								} else {
+									_events[event] = [];
+								}
 							}
 						}
 						return this;
@@ -301,13 +315,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				}, {
 					key: "once",
 					value: function once(events, callback) {
+						var _this = this;
+
 						var _events = this.__events;
 
 						var eventsObj = castToEventObject(events, callback);
-						for (var event in eventsObj) {
+
+						var _loop = function _loop(event) {
 							if (eventsObj.hasOwnProperty(event)) {
-								addEventListener(_events, event, onceify(this, event, eventsObj[event]));
+								var _events2 = ensureArray(eventsObj[event]);
+								_events2.forEach(function (eventHandler) {
+									addEventListener(_events, event, onceify(_this, event, eventHandler));
+								});
 							}
+						};
+
+						for (var event in eventsObj) {
+							_loop(event);
 						}
 
 						return this;
