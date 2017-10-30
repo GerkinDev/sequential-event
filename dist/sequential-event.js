@@ -2,7 +2,7 @@
 * @file sequential-event
 * 
 * This library is a variation of standard event emitters. Handlers are executed sequentialy, and may return Promises if it executes asynchronous code
-* Built on 2017-10-21 17:42:46
+* Built on 2017-10-30 19:34:29
 *
 * @license GPL-3.0
 * @version 0.2.0
@@ -56,7 +56,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     * Handle execution of all handlers in sequence.
     *
     * @param   {Function|Function[]} handlers - Function(s) to execute. Each function may return a Promise.
-    * @param   {EventEmitter}        object   - Objecto call event on.
+    * @param   {SequentialEvent}     object   - Objecto call event on.
     * @param   {Any[]}               [args]   - Arguments to pass to each called function.
     * @returns {Promise} Promise resolved once each function is executed.
     * @memberof SequentialEvent
@@ -69,41 +69,49 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 				if ('function' === typeof handlers) {
 					return emitHandler(handlers, object, args);
 				} else {
-					var i = 0;
-					var handlersLength = handlers.length;
-
-					var sourcePromise = new Promise(function (resolve, reject) {
-						/**
-       * Generate next promise for sequence.
-       *
-       * @param   {Any} prevResolve - Event chain resolved value.
-       * @returns {undefined} This function does not return anything.
-       * @memberof SequentialEvent
-       * @author Gerkin
-       * @inner
-       */
-						var getNextPromise = function getNextPromise(prevResolve) {
-							if (i < handlersLength) {
-								var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
-								var newPromise = emitHandler(handlers[i], object, stepArgs);
-								newPromise.then(getNextPromise).catch(reject);
-								i++;
-							} else {
-								return resolve.call(null, prevResolve);
-							}
-						};
-						getNextPromise();
-					});
+					var promiseGen = getNextPromise(handlers, object, args);
+					var sourcePromise = new Promise(promiseGen);
 					return sourcePromise;
 				}
 			};
 
 			/**
+    * Generate next promise for sequence.
+    *
+    * @param   {Function|Function[]} handlers - Function(s) to execute. Each function may return a Promise.
+    * @param   {SequentialEvent}     object   - Objecto call event on.
+    * @param   {Any[]}               [args]   - Arguments to pass to each called function.
+    * @returns {Function} Promise handler.
+    * @memberof SequentialEvent
+    * @author Gerkin
+    * @inner
+    */
+
+			var getNextPromise = function getNextPromise(handlers, object, args) {
+				//(resolve, reject) => {
+				var i = 0;
+				var handlersLength = handlers.length;
+				return function (resolve, reject) {
+					var _getNextPromise = function _getNextPromise(prevResolve) {
+						if (i < handlersLength) {
+							var stepArgs = 'undefined' !== typeof prevResolve ? args.concat([prevResolve]) : args.slice(0);
+							var newPromise = emitHandler(handlers[i], object, stepArgs);
+							newPromise.then(_getNextPromise).catch(reject);
+							i++;
+						} else {
+							return resolve.call(null, prevResolve);
+						}
+					};
+					return _getNextPromise();
+				};
+			};
+
+			/**
     * Handle execution of a single handler.
     *
-    * @param   {Function}     handler - Function to execute. It may return a Promise.
-    * @param   {EventEmitter} object  - Object to call event on.
-    * @param   {Any[]}        [args]  - Arguments to pass to each called function.
+    * @param   {Function}        handler - Function to execute. It may return a Promise.
+    * @param   {SequentialEvent} object  - Object to call event on.
+    * @param   {Any[]}           [args]  - Arguments to pass to each called function.
     * @returns {Promise} Promise resolved once this function is done.
     * @memberof SequentialEvent
     * @author Gerkin
@@ -165,7 +173,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 			/**
     * Add an event listener to the provided event hash.
     *
-    * @param   {Object}   eventHash  - Hash of events of the object. It is usually retrieved from `object.__events`
+    * @param   {Object}   eventHash  - Hash of events of the object. It is usually retrieved from `object.__events`.
     * @param   {string}   eventName  - Name of the event to add listener on.
     * @param   {Function} [callback] - Callback to add.
     * @returns {undefined} This function does not returns anything.
@@ -179,9 +187,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 			};
 
 			/**
-    * Ensure that event & callback are on the associative hash format
+    * Ensure that event & callback are on the associative hash format.
     *
-    * @param   {Object<string, Function>|string} events   - Events to cast in hash form
+    * @param   {Object<string, Function>|string} events   - Events to cast in hash form.
     * @param   {Function}                        callback - Function to associate with those events.
     * @returns {Object<string, Function>} Events in hash format.
     * @memberof SequentialEvent
