@@ -7,6 +7,7 @@ engines:
       - javascript
   eslint:
     enabled: true
+    channel: "eslint-4"
   fixme:
     enabled: true
   nodesecurity:
@@ -20,11 +21,6 @@ checks:
     config:
       threshold: 10
 exclude_paths:
-- "dist/"
-- "node_modules/"
-- "test/"
-- "docs/"
-- "Gruntfile.js"
-- "LICENSE"
-- "*.md"
-- "*.json"
+- "./*"
+- "!lib/"
+- "!index.js"
