@@ -1,9 +1,10 @@
-import SequentialEvent from './sequential-event.d'
+/// <reference path="./sequential-event.d.ts"/>
+
+import { SequentialEvent } from './sequential-event'
 
 import IEventHandler = SequentialEvent.IEventHandler
 import IEventsHash = SequentialEvent.IEventsHash
 import IEventHash = SequentialEvent.IEventHash
-
 /**
  * Handle execution of a single handler.
  *
@@ -184,12 +185,12 @@ export const addEventListener = (
  */
 export const castToEventObject = (
 	events: IEventHash | string,
-	callback?: IEventHandler | boolean
+	callback?: IEventHandler
 ): IEventHash => {
 	if ('string' === typeof events && 'function' === typeof callback) {
 		const eventsObj: IEventHash = {}
 		events.split(' ').forEach((event: string) => {
-			eventsObj[event] = 'function' === typeof callback ? callback : null
+			eventsObj[event] = callback
 		})
 		return eventsObj
 	} else if ('object' === typeof events) {
@@ -206,9 +207,9 @@ export const ensureArray: <T>(data: T | T[]) => T[] = <T>(data: T | T[]) => {
 	return (Array === data.constructor ? data : [data]) as T[]
 }
 
-export const forEachObj = (
-	object: { [key: string]: any },
-	callback: Function
+export const forEachObj = <T>(
+	object: { [key: string]: T },
+	callback: (value: T, key: string) => any
 ) => {
 	Object.keys(object).map((key: any) => callback(object[key], key))
 }

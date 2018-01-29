@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import sourceMaps from 'rollup-plugin-sourcemaps'
 import camelCase from 'lodash.camelcase'
 import typescript from 'rollup-plugin-typescript2'
+import uglify from 'rollup-plugin-uglify';
 
 const pkg = require('./package.json')
 
@@ -25,6 +26,8 @@ export default {
     typescript(),
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs(),
+    // Minify
+    uglify(),
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage

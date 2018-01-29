@@ -1,5 +1,3 @@
-import SequentialEvent from './sequential-event.d'
-
 import IEventHandler = SequentialEvent.IEventHandler
 import IEventsHash = SequentialEvent.IEventsHash
 import IEventHash = SequentialEvent.IEventHash
@@ -60,12 +58,10 @@ export class SequentialEvent {
 	/**
 	 * Remove one or many or all event handlers.
 	 *
-	 * @param   {string|Object} [events]   - Event name or hash of events.
-	 * @param   {Function}      [callback] - If provided an event name with `events`, function to associate with the event.
-	 * @returns {SequentialEvent} Returns `this`.
+	 * @author Gerkin
 	 */
-	off(events: string, callback: IEventHandler): this
-	off(events: IEventsHash): this
+	off(events: string, callback?: IEventHandler): this
+	off(events?: IEventsHash): this
 	off(events?: any, callback?: IEventHandler): this {
 		const _events = this.__events
 
@@ -78,7 +74,8 @@ export class SequentialEvent {
 			if ('string' === typeof events) {
 				events.split(' ').forEach(event => (_events[event] = []))
 			} else {
-				forEachObj(events, (handler, event) => {
+				const eventsHash: IEventHash = events
+				forEachObj(eventsHash, (handler, event) => {
 					removeEventListener(_events[event], handler)
 				})
 			}
@@ -96,7 +93,25 @@ export class SequentialEvent {
 	}
 
 	/**
+	 * Add one or many event handlers.
+	 *
+	 * @author Gerkin
+	 */
+	on(events: string | IEventsHash, callback?: IEventHandler) {
+		const _events = this.__events
+
+		const eventsObj = castToEventObject(events, callback)
+		forEachObj(eventsObj, (handler, event) => {
+			addEventListener(_events, event, handler)
+		})
+
+		return this
+	}
+
+	/**
 	 * Add one or many event handlers that will be called only once.
+	 *
+	 * @author Gerkin
 	 */
 	once(events: string | IEventsHash, callback?: IEventHandler) {
 		const _events = this.__events
@@ -112,17 +127,10 @@ export class SequentialEvent {
 		return this
 	}
 
-	/**
-	 * Add one or many event handlers.
-	 */
-	on(events: string | IEventsHash, callback?: IEventHandler) {
-		const _events = this.__events
-
-		const eventsObj = castToEventObject(events, callback)
-		forEachObj(eventsObj, (handler, event) => {
-			addEventListener(_events, event, handler)
-		})
-
-		return this
+	has(event: string) {
+		return this.hasEvent(event)
+	}
+	hasEvent(event: string): boolean {
+		return this.__events.hasOwnProperty(event)
 	}
 }

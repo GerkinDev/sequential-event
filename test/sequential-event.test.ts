@@ -14,6 +14,21 @@ const asyncMock = (ms: number, implementation?: (...args: any[]) => any) => {
 }
 
 describe('Event Emitter', () => {
+	it('Triggering unknown event', async () => {
+		const mySequentialEvent1 = new SequentialEvent()
+
+		const ret = await mySequentialEvent1.emit('test')
+		expect(ret).toBeUndefined()
+	})
+	it('Check hasEvent/has methods', () => {
+		const mySequentialEvent1 = new SequentialEvent()
+
+		mySequentialEvent1.on('a', () => undefined)
+		expect(mySequentialEvent1.has('a')).toEqual(true)
+		expect(mySequentialEvent1.has('b')).toEqual(false)
+		expect(mySequentialEvent1.hasEvent('a')).toEqual(true)
+		expect(mySequentialEvent1.hasEvent('b')).toEqual(false)
+	})
 	describe('Synchrone events', () => {
 		it('Single event, single callback', async () => {
 			const test = jest.fn()
@@ -188,55 +203,50 @@ describe('Promises resolve/reject arguments', () => {
 		expect(ret).toEqual(data + 3)
 	})
 })
+describe('Once & remove listeners', () => {
+	it('"once" handlers should be executed only once', async () => {
+		const test = jest.fn()
+		const mySequentialEvent = new SequentialEvent()
 
-it('Triggering unknown event', async () => {
-	const mySequentialEvent1 = new SequentialEvent()
+		mySequentialEvent.once('foo', test)
+		await Promise.all([
+			mySequentialEvent.emit('foo'),
+			mySequentialEvent.emit('foo'),
+			mySequentialEvent.emit('foo'),
+		])
 
-	const ret = await mySequentialEvent1.emit('test')
-	expect(ret).toBeUndefined()
-})
-it('"once" handlers should be executed only once', async () => {
-	const test = jest.fn()
-	const mySequentialEvent = new SequentialEvent()
+		expect(test).toHaveBeenCalledTimes(1)
+	})
+	it('Remove all listeners', async () => {
+		const tests = [jest.fn(), jest.fn()]
+		const mySequentialEvent = new SequentialEvent()
 
-	mySequentialEvent.once('foo', test)
-	await Promise.all([
-		mySequentialEvent.emit('foo'),
-		mySequentialEvent.emit('foo'),
-		mySequentialEvent.emit('foo'),
-	])
+		mySequentialEvent.on('foo', tests[0])
+		mySequentialEvent.on('bar', tests[1])
+		mySequentialEvent.off()
+		await Promise.all([
+			mySequentialEvent.emit('foo'),
+			mySequentialEvent.emit('bar'),
+		])
 
-	expect(test).toHaveBeenCalledTimes(1)
-})
-it('Remove all listeners', async () => {
-	const tests = [jest.fn(), jest.fn()]
-	const mySequentialEvent = new SequentialEvent()
+		expect(tests[0]).toHaveBeenCalledTimes(0)
+		expect(tests[1]).toHaveBeenCalledTimes(0)
+	})
+	it('Remove listeners on single event', async () => {
+		const tests = [jest.fn(), jest.fn()]
+		const mySequentialEvent = new SequentialEvent()
 
-	mySequentialEvent.on('foo', tests[0])
-	mySequentialEvent.on('bar', tests[1])
-	mySequentialEvent.off()
-	await Promise.all([
-		mySequentialEvent.emit('foo'),
-		mySequentialEvent.emit('bar'),
-	])
+		mySequentialEvent.on('foo', tests[0])
+		mySequentialEvent.on('bar', tests[1])
+		mySequentialEvent.off('foo')
+		await Promise.all([
+			mySequentialEvent.emit('foo'),
+			mySequentialEvent.emit('bar'),
+		])
 
-	expect(tests[0]).toHaveBeenCalledTimes(0)
-	expect(tests[1]).toHaveBeenCalledTimes(0)
-})
-it('Remove listeners on single event', async () => {
-	const tests = [jest.fn(), jest.fn()]
-	const mySequentialEvent = new SequentialEvent()
-
-	mySequentialEvent.on('foo', tests[0])
-	mySequentialEvent.on('bar', tests[1])
-	mySequentialEvent.off('foo')
-	await Promise.all([
-		mySequentialEvent.emit('foo'),
-		mySequentialEvent.emit('bar'),
-	])
-
-	expect(tests[0]).toHaveBeenCalledTimes(0)
-	expect(tests[1]).toHaveBeenCalledTimes(1)
+		expect(tests[0]).toHaveBeenCalledTimes(0)
+		expect(tests[1]).toHaveBeenCalledTimes(1)
+	})
 })
 describe('Use Objects to describe events', () => {
 	it('Check "on"', async () => {
