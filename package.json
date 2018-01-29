@@ -21,7 +21,7 @@
   "author": "Gerkin <nihilivin@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GerkinDev/sequential-event.git"
+    "url": "https://github.com/GerkinDev/sequential-event.git"
   },
   "license": "GPL-3.0",
   "engines": {
@@ -38,9 +38,10 @@
     "deploy-docs": "ts-node tools/gh-pages-publish",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "prettier": {
     "printWidth": 80,
@@ -113,6 +114,7 @@
     "rollup-plugin-typescript2": "^0.10.0",
     "rollup-plugin-uglify": "^3.0.0",
     "semantic-release": "^12.4.1",
+    "travis-deploy-once": "^4.3.3",
     "ts-jest": "^22.0.2",
     "ts-node": "^4.1.0",
     "tslint": "^5.8.0",
