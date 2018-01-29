@@ -22,6 +22,7 @@ after_script:
   - |
     ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success:
+  - npm run build
   - npm run deploy-docs
   - npm run semantic-release
 env:
