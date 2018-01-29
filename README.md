@@ -1,17 +1,17 @@
-# SequentialEvent.js
+# sequential-event
 
 Code checks:
-[![Build Status](https://travis-ci.org/GerkinDev/SequentialEvent.js.svg?branch=master)](https://travis-ci.org/GerkinDev/SequentialEvent.js)
-[![Dependency Status](https://gemnasium.com/badges/github.com/GerkinDev/SequentialEvent.js.svg)](https://gemnasium.com/github.com/GerkinDev/SequentialEvent.js)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ea9a91bf0396e7eab39d/maintainability)](https://codeclimate.com/github/GerkinDev/SequentialEvent.js/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ea9a91bf0396e7eab39d/test_coverage)](https://codeclimate.com/github/GerkinDev/SequentialEvent.js/test_coverage)
+[![Build Status](https://travis-ci.org/GerkinDev/sequential-event.svg?branch=master)](https://travis-ci.org/GerkinDev/sequential-event)
+[![Dependency Status](https://gemnasium.com/badges/github.com/GerkinDev/sequential-event.svg)](https://gemnasium.com/github.com/GerkinDev/sequential-event)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ea9a91bf0396e7eab39d/maintainability)](https://codeclimate.com/github/GerkinDev/sequential-event/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ea9a91bf0396e7eab39d/test_coverage)](https://codeclimate.com/github/GerkinDev/sequential-event/test_coverage)
 
 Package infos:
 [![npm](https://img.shields.io/npm/dm/sequential-event.svg)](https://npmjs.org/package/sequential-event)
 [![npm version](https://badge.fury.io/js/sequential-event.svg)](https://badge.fury.io/js/sequential-event)
-[![license](https://img.shields.io/github/license/GerkinDev/SequentialEvent.js.svg)](https://github.com/GerkinDev/SequentialEvent.js)
+[![license](https://img.shields.io/github/license/GerkinDev/sequential-event.svg)](https://github.com/GerkinDev/sequential-event)
 
-> **See the API documentation on [github.io/SequentialEvent.js](https://gerkindev.github.io/SequentialEvent.js/)**
+> **See the API documentation on [github.io/sequential-event](https://gerkindev.github.io/sequential-event/)**
 
 This library is a variation of standard event emitters. Handlers are executed
 sequentialy, and may return **Promises** if it executes asynchronous code.
@@ -158,4 +158,3 @@ This package can run on:
  - `npm run build`: Generate bundles and typings, create docs
  - `npm run lint`: Lints code
  - `npm run commit`: Commit using conventional commit style ([husky](https://github.com/typicode/husky) will tell you to use it if you haven't :wink:)
- 
