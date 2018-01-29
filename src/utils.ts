@@ -1,10 +1,10 @@
 /// <reference path="./sequential-event.d.ts"/>
 
-import { SequentialEvent } from './sequential-event'
+import { SequentialEvent } from './sequential-event';
 
-import IEventHandler = SequentialEvent.IEventHandler
-import IEventsHash = SequentialEvent.IEventsHash
-import IEventHash = SequentialEvent.IEventHash
+import IEventHandler = SequentialEvent.IEventHandler;
+import IEventsHash = SequentialEvent.IEventsHash;
+import IEventHash = SequentialEvent.IEventHash;
 /**
  * Handle execution of a single handler.
  *
@@ -18,16 +18,16 @@ const emitHandler = (
 	args: any[]
 ): Promise<any> => {
 	try {
-		const retVal = handler.apply(object, args)
+		const retVal = handler.apply(object, args);
 		if ('object' === typeof retVal && 'function' === typeof retVal.then) {
-			return retVal
+			return retVal;
 		} else {
-			return Promise.resolve(retVal)
+			return Promise.resolve(retVal);
 		}
 	} catch (e) {
-		return Promise.reject(e)
+		return Promise.reject(e);
 	}
-}
+};
 /**
  * Handle execution of all handlers in sequence.
  *
@@ -40,10 +40,10 @@ export const emitHandlers = (
 	object: SequentialEvent,
 	args: any[]
 ): Promise<any> => {
-	handlers = ensureArray(handlers)
-	const promiseGen = getNextPromise(handlers, object, args)
-	return new Promise(promiseGen)
-}
+	handlers = ensureArray(handlers);
+	const promiseGen = getNextPromise(handlers, object, args);
+	return new Promise(promiseGen);
+};
 
 /**
  * Generate next promise for sequence.
@@ -58,31 +58,31 @@ export const getNextPromise = (
 	object: SequentialEvent,
 	args: any[]
 ): ((resolve: Function, reject: (reason: any) => any) => Function) => {
-	let i = 0
-	let handlersLength = handlers.length
+	let i = 0;
+	let handlersLength = handlers.length;
 	return (resolve: Function, reject: (reason: any) => any) => {
 		const _getNextPromise = (prevResolve?: any) => {
 			// Handle if an event handler disapeared during event dispatching
-			const handlersLength2 = handlers.length
+			const handlersLength2 = handlers.length;
 			if (handlersLength2 !== handlersLength) {
-				i -= handlersLength - handlersLength2
-				handlersLength = handlersLength2
+				i -= handlersLength - handlersLength2;
+				handlersLength = handlersLength2;
 			}
 			if (i < handlersLength) {
 				const stepArgs =
 					'undefined' !== typeof prevResolve
 						? args.concat([prevResolve])
-						: args.slice(0)
-				const newPromise = emitHandler(handlers[i], object, stepArgs)
-				newPromise.then(_getNextPromise).catch(reject)
-				i++
+						: args.slice(0);
+				const newPromise = emitHandler(handlers[i], object, stepArgs);
+				newPromise.then(_getNextPromise).catch(reject);
+				i++;
 			} else {
-				return resolve.call(null, prevResolve)
+				return resolve.call(null, prevResolve);
 			}
-		}
-		return _getNextPromise()
-	}
-}
+		};
+		return _getNextPromise();
+	};
+};
 
 /**
  * Generate an event handler that deregister itself when executed. This handler will be executed  just once.
@@ -100,17 +100,17 @@ export const onceify = (
 	eventName: string,
 	eventFn: IEventHandler
 ): SequentialEvent.IOnceHandler => {
-	let called = false
+	let called = false;
 	const once = function(...args: any[]) {
 		if (!called) {
-			target.off(eventName, once)
-			called = true
-			return eventFn(...args)
+			target.off(eventName, once);
+			called = true;
+			return eventFn(...args);
 		}
-	} as SequentialEvent.IOnceHandler
-	once.origFn = eventFn
-	return once
-}
+	} as SequentialEvent.IOnceHandler;
+	once.origFn = eventFn;
+	return once;
+};
 
 const removeSingleListener = (
 	eventCat: IEventHandler[],
@@ -121,23 +121,23 @@ const removeSingleListener = (
 		eventCat.indexOf(callback),
 		// Check in once events
 		(() => {
-			const I = eventCat.length
+			const I = eventCat.length;
 			for (let i = 0; i < I; i++) {
 				if ((eventCat[i] as SequentialEvent.IOnceHandler).origFn === callback) {
-					return i
+					return i;
 				}
 			}
-			return -1
+			return -1;
 		})(),
-	]
-	const index = Math.min(...indexes.filter(v => v >= 0))
+	];
+	const index = Math.min(...indexes.filter(v => v >= 0));
 	if (isFinite(index)) {
-		eventCat.splice(index, 1)
-		return true
+		eventCat.splice(index, 1);
+		return true;
 	} else {
-		return false
+		return false;
 	}
-}
+};
 
 /**
  * Remove provided `callback` from listeners of event `eventCat`.
@@ -148,16 +148,15 @@ const removeSingleListener = (
  */
 export const removeEventListener = (
 	eventCat: IEventHandler[],
-	callback: IEventHandler | IEventHandler[]
+	callback: IEventHandler[]
 ): void => {
-	callback = ensureArray(callback)
-	const I = callback.length
+	const I = callback.length;
 	for (let i = 0; i < I; i++) {
 		if (removeSingleListener(eventCat, callback[i])) {
-			i--
+			i--;
 		}
 	}
-}
+};
 
 /**
  * Add an event listener to the provided event hash.
@@ -169,12 +168,12 @@ export const removeEventListener = (
 export const addEventListener = (
 	eventHash: IEventsHash,
 	eventName: string,
-	callback: IEventHandler | IEventHandler[]
+	callback: IEventHandler[]
 ): void => {
-	eventHash[eventName] = ensureArray(eventHash[eventName]).concat(
-		ensureArray(callback)
-	)
-}
+	eventHash[eventName] = ensureArray(eventHash[eventName] || []).concat(
+		callback
+	);
+};
 
 /**
  * Ensure that event & callback are on the associative hash format.
@@ -183,33 +182,40 @@ export const addEventListener = (
  * @author Gerkin
  * @inner
  */
-export const castToEventObject = (
-	events: IEventHash | string,
-	callback?: IEventHandler
-): IEventHash => {
-	if ('string' === typeof events && 'function' === typeof callback) {
-		const eventsObj: IEventHash = {}
-		events.split(' ').forEach((event: string) => {
-			eventsObj[event] = callback
-		})
-		return eventsObj
-	} else if ('object' === typeof events) {
-		return events
-	} else {
-		throw new TypeError('Incorrect parameters')
-	}
-}
 
 export const ensureArray: <T>(data: T | T[]) => T[] = <T>(data: T | T[]) => {
 	if ('undefined' === typeof data) {
-		return []
+		return [];
 	}
-	return (Array === data.constructor ? data : [data]) as T[]
-}
+	return (Array === data.constructor ? data : [data]) as T[];
+};
 
 export const forEachObj = <T>(
 	object: { [key: string]: T },
 	callback: (value: T, key: string) => any
 ) => {
-	Object.keys(object).map((key: any) => callback(object[key], key))
-}
+	Object.keys(object).forEach((key: any) => callback(object[key], key));
+};
+
+export const castArgsToEventsHash = (
+	events: string | IEventHash,
+	callback?: IEventHandler | IEventHandler[]
+) => {
+	if (typeof events === 'string' && typeof callback !== 'undefined') {
+		const eventsHash: IEventsHash = {};
+		const callbackArr: IEventHandler[] = ensureArray(callback);
+		events.split(' ').forEach(event => {
+			eventsHash[event] = callbackArr;
+		});
+		return eventsHash;
+	} else if (typeof events === 'object' && typeof callback === 'undefined') {
+		const eventsHash: IEventsHash = {};
+		forEachObj(
+			events,
+			(callback, event) => (eventsHash[event] = ensureArray(callback))
+		);
+		return eventsHash;
+	} else {
+		throw new Error('Incorrect parameters');
+	}
+};

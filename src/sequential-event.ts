@@ -1,17 +1,17 @@
-import IEventHandler = SequentialEvent.IEventHandler
-import IEventsHash = SequentialEvent.IEventsHash
-import IEventHash = SequentialEvent.IEventHash
+import IEventHandler = SequentialEvent.IEventHandler;
+import IEventsHash = SequentialEvent.IEventsHash;
+import IEventHash = SequentialEvent.IEventHash;
 
 import {
 	getNextPromise,
 	addEventListener,
 	removeEventListener,
 	ensureArray,
-	castToEventObject,
 	emitHandlers,
 	onceify,
 	forEachObj,
-} from './utils'
+	castArgsToEventsHash,
+} from './utils';
 
 /**
  * @file File defining the SequentialEvent class
@@ -25,8 +25,11 @@ import {
  * @see {@link https://nodejs.org/api/events.html Node EventEmitter}.
  */
 export class SequentialEvent {
+	/**
+	 * Events hash attached to this SequentialEvent instance
+	 */
 	// tslint:disable-next-line:variable-name
-	protected __events: IEventsHash
+	protected __events: IEventsHash;
 
 	/**
 	 * Constructs a new SequentialEvent.
@@ -34,103 +37,151 @@ export class SequentialEvent {
 	 * @author Gerkin
 	 */
 	constructor() {
-		this.__events = {}
+		this.__events = {};
 	}
 
 	/**
 	 * Triggers each corresponding handlers in sequence.
 	 *
+	 * @param event Name of the event to trigger
+	 * @param args Arguments to pass to each handler. Note that those arguments will be appended with previous handler resolution value, if any.
 	 * @author Gerkin
 	 */
-	emit(type: string, ...args: any[]) {
-		const events = this.__events
+	emit(event: string, ...args: any[]) {
+		const events = this.__events;
 
-		const handler = events[type]
+		const handler = events[event];
 		if (!handler) {
-			return Promise.resolve()
+			return Promise.resolve();
 		}
 
-		const retPromise = emitHandlers(handler, this, args)
+		const retPromise = emitHandlers(handler, this, args);
 
-		return retPromise
+		return retPromise;
 	}
 
 	/**
-	 * Remove one or many or all event handlers.
+	 * Remove one, many or all event handlers on some events.
 	 *
+	 * @param events String containing event names to unbind. You may indicate several events at once by separating with *spaces*
+	 * @param callback Function or array of functions to unbind on specified events
 	 * @author Gerkin
 	 */
-	off(events: string, callback?: IEventHandler): this
-	off(events?: IEventsHash): this
-	off(events?: any, callback?: IEventHandler): this {
-		const _events = this.__events
+	off(events: string, callback?: IEventHandler | IEventHandler[]): this;
+	/**
+	 * Remove event handlers on several events at once.
+	 *
+	 * @param events Object with keys as event names containing a handler or an array of handlers to remove.
+	 * @author Gerkin
+	 */
+	off(events: IEventHash): this;
+	/**
+	 * Remove all events handlers
+	 *
+	 * @param all Pass true to delete all handlers
+	 * @author Gerkin
+	 */
+	// tslint:disable-next-line:unified-signatures
+	off(all: true): this;
+	off(
+		events: string | IEventHash | true,
+		callback?: IEventHandler | IEventHandler[]
+	): this {
+		const _events = this.__events;
 
-		if (!events) {
-			this.__events = {}
-			return this
+		if (events === true) {
+			this.__events = {};
+			return this;
+		} else if (typeof events === 'string' && typeof callback === 'undefined') {
+			events.split(' ').forEach(event => (this.__events[event] = []));
+			return this;
 		}
 
-		if ('function' !== typeof callback) {
-			if ('string' === typeof events) {
-				events.split(' ').forEach(event => (_events[event] = []))
-			} else {
-				const eventsHash: IEventHash = events
-				forEachObj(eventsHash, (handler, event) => {
-					removeEventListener(_events[event], handler)
-				})
-			}
-		} else {
-			const eventsObj = castToEventObject(events, callback)
-			forEachObj(eventsObj, (handler, event) => {
-				if (_events[event]) {
-					removeEventListener(_events[event], handler)
-				} else {
-					_events[event] = []
-				}
-			})
-		}
-		return this
+		const eventsHash: IEventsHash = castArgsToEventsHash(events, callback);
+		forEachObj(eventsHash, (handler, event) => {
+			removeEventListener(_events[event], handler);
+		});
+		return this;
 	}
 
 	/**
 	 * Add one or many event handlers.
 	 *
+	 * @param events String containing event names to bind. You may indicate several events at once by separating with *spaces*
+	 * @param callback Function or array of functions to bind on specified events
 	 * @author Gerkin
 	 */
-	on(events: string | IEventsHash, callback?: IEventHandler) {
-		const _events = this.__events
+	on(events: string, callback: IEventHandler | IEventHandler[]): this;
+	/**
+	 * Add event handlers on several events at once.
+	 *
+	 * @param events Object with keys as event names containing a handler or an array of handlers to add.
+	 * @author Gerkin
+	 */
+	on(events: IEventHash): this;
+	on(
+		events: string | IEventHash,
+		callback?: IEventHandler | IEventHandler[]
+	): this {
+		const _events = this.__events;
 
-		const eventsObj = castToEventObject(events, callback)
-		forEachObj(eventsObj, (handler, event) => {
-			addEventListener(_events, event, handler)
-		})
+		const eventsHash: IEventsHash = castArgsToEventsHash(events, callback);
+		forEachObj(eventsHash, (handler, event) => {
+			addEventListener(_events, event, handler);
+		});
 
-		return this
+		return this;
 	}
 
 	/**
-	 * Add one or many event handlers that will be called only once.
+	 * Add one or many event handlers. These listeners will be executed once, then are removed
 	 *
+	 * @param events String containing event names to bind. You may indicate several events at once by separating with *spaces*
+	 * @param callback Function or array of functions to bind on specified events
 	 * @author Gerkin
 	 */
-	once(events: string | IEventsHash, callback?: IEventHandler) {
-		const _events = this.__events
+	once(events: string, callback: IEventHandler | IEventHandler[]): this;
+	/**
+	 * Add event handlers on several events at once. These listeners will be executed once, then are removed
+	 *
+	 * @param events Object with keys as event names containing a handler or an array of handlers to add.
+	 * @author Gerkin
+	 */
+	once(events: IEventHash): this;
+	once(
+		events: string | IEventHash,
+		callback?: IEventHandler | IEventHandler[]
+	): this {
+		const _events = this.__events;
 
-		const eventsObj = castToEventObject(events, callback)
-		forEachObj(eventsObj, (handler, event) => {
-			const handlers = ensureArray(handler)
-			handlers.forEach(eventHandler => {
-				addEventListener(_events, event, onceify(this, event, eventHandler))
-			})
-		})
+		const eventsHash: IEventsHash = castArgsToEventsHash(events, callback);
+		forEachObj(eventsHash, (handlers, event) => {
+			addEventListener(
+				_events,
+				event,
+				handlers.map(eventHandler => onceify(this, event, eventHandler))
+			);
+		});
 
-		return this
+		return this;
 	}
 
+	/**
+	 * Check if this instance has listeners for the provided event. Alias for `hasEvent`
+	 *
+	 * @param event Name of the event to check
+	 * @author Gerkin
+	 */
 	has(event: string) {
-		return this.hasEvent(event)
+		return this.hasEvent(event);
 	}
+	/**
+	 * Check if this instance has listeners for the provided event
+	 *
+	 * @param event Name of the event to check
+	 * @author Gerkin
+	 */
 	hasEvent(event: string): boolean {
-		return this.__events.hasOwnProperty(event)
+		return this.__events.hasOwnProperty(event) && this.__events[event].length > 0;
 	}
 }
