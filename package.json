@@ -21,7 +21,7 @@
   "author": "Gerkin <nihilivin@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GerkinDev/SequentialEvent.js.git"
+    "url": "git+https://github.com/GerkinDev/sequential-event.git"
   },
   "license": "GPL-3.0",
   "engines": {
