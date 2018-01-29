@@ -23,4 +23,4 @@ after_script:
     ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 env:
   global:
-    - CC_TEST_REPORTER_ID=44a8b1ae86577092040904da4ac5c76afd29648333c2ad4039e7622a90800745
+    - CC_TEST_REPORTER_ID=9075139db94c625bacbe5d3e7fd49ba5eb4051267c12b94baa43d7259a0829b0
