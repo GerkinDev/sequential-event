@@ -3,8 +3,8 @@
 Code checks:
 [![Build Status](https://travis-ci.org/GerkinDev/sequential-event.svg?branch=master)](https://travis-ci.org/GerkinDev/sequential-event)
 [![Dependency Status](https://gemnasium.com/badges/github.com/GerkinDev/sequential-event.svg)](https://gemnasium.com/github.com/GerkinDev/sequential-event)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ea9a91bf0396e7eab39d/maintainability)](https://codeclimate.com/github/GerkinDev/sequential-event/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ea9a91bf0396e7eab39d/test_coverage)](https://codeclimate.com/github/GerkinDev/sequential-event/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6f730e6f07635b7a57ad/maintainability)](https://codeclimate.com/github/GerkinDev/sequential-event/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6f730e6f07635b7a57ad/test_coverage)](https://codeclimate.com/github/GerkinDev/sequential-event/test_coverage)
 
 Package infos:
 [![npm](https://img.shields.io/npm/dm/sequential-event.svg)](https://npmjs.org/package/sequential-event)

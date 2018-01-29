@@ -1,4 +1,4 @@
-const { cd, exec, echo, touch } = require("shelljs")
+const { cd, exec, echo, touch, rm } = require("shelljs")
 const { readFileSync } = require("fs")
 const url = require("url")
 
@@ -17,6 +17,9 @@ let parsedUrl = url.parse(repoUrl)
 let repository = (parsedUrl.host || "") + (parsedUrl.path || "")
 let ghToken = process.env.GH_TOKEN
 
+
+exec('rm -r dist/docs')
+exec('npm run doc');
 echo("Deploying docs!!!")
 cd("dist/docs")
 touch(".nojekyll")
