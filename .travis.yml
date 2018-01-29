@@ -1,63 +1,19 @@
 language: node_js
-matrix:
-  include:
-    - node_js: "node"
-      addons:
-        sauce_connect: true
-      env:
-        - SAUCE=yes
-        - BROWSER_NAME=chrome
-    - node_js: "node"
-      addons:
-        sauce_connect: true
-      env:
-        - SAUCE=yes
-        - BROWSER_NAME=firefox
-    - node_js: "node"
-      addons:
-        sauce_connect: true
-      env:
-        - SAUCE=yes
-        - BROWSER_NAME="internet explorer"
-    - node_js: "8"
-      env: SAUCE=no
-    - node_js: "7"
-      env: SAUCE=no
-    - node_js: "6"
-      env: SAUCE=no
-env: 
-  global:
-    - CC_TEST_REPORTER_ID=44a8b1ae86577092040904da4ac5c76afd29648333c2ad4039e7622a90800745
-    - SAUCE_USERNAME=Gerkin
-    - SAUCE_ACCESS_KEY=bcc962ee-af76-4e36-bf15-ce3cbbbb5b8c
-notifications:
-  slack:
-    rooms:
-      - altenter-project:Pc8sMyCuHNPBCg1TOw0weD9S#tech
-before_install:
-  - rm npm-shrinkwrap.json
-before_script:
-  - |
-    if [ $SAUCE == "yes" ]; then
-        python -m SimpleHTTPServer &
-        sleep 2
-    else
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
-        ./cc-test-reporter before-build
-    fi
-script:
-  - |
-    if [ $SAUCE == "yes" ]; then
-        npm run test
-    else
-        npm run test-coverage
-    fi
-after_script:
-  - |
-    if [ $SAUCE == "no" ]; then
-        ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-    fi
+branches:
+  only:
+    - master
+    - /^greenkeeper/.*$/
 cache:
+  yarn: true
   directories:
-    - "node_modules"
+    - node_modules
+notifications:
+  email: false
+node_js:
+  - node
+script:
+  - npm run test:prod && npm run build
+after_success:
+  - npm run report-coverage
+  - npm run deploy-docs
+  - npm run semantic-release
