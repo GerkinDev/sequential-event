@@ -10,6 +10,7 @@ Package infos:
 [![npm](https://img.shields.io/npm/dm/sequential-event.svg)](https://npmjs.org/package/sequential-event)
 [![npm version](https://badge.fury.io/js/sequential-event.svg)](https://badge.fury.io/js/sequential-event)
 [![license](https://img.shields.io/github/license/GerkinDev/sequential-event.svg)](https://github.com/GerkinDev/sequential-event)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 > **See the API documentation on [github.io/sequential-event](https://gerkindev.github.io/sequential-event/)**
 
