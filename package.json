@@ -47,11 +47,12 @@
     "useTabs": true,
     "tabWidth": 1,
     "singleQuote": true,
-    "trailingComma": "es5"
+    "trailingComma": "es5",
+    "semi": true
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
-      "prettier --write --no-semi --single-quote",
+      "prettier --write",
       "git add"
     ]
   },
