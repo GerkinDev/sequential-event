@@ -25,7 +25,7 @@ after_success:
   - npm run build
   - npm run deploy-docs
   - npm run semantic-release
-  - git stash && git checkout -B post_ci && git stash pop && git add . && git commit -m "Bump version" && git push --force https://$GH_TOKEN@github.com/GerkinDev/sequential-event.git post_ci
+  - git stash && git checkout -B post_ci && git stash pop && git add . && git reset npm-shrinkwrap.json package-lock.json &&  git commit -m "Bump version" && git push --force https://$GH_TOKEN@github.com/GerkinDev/sequential-event.git post_ci
 env:
   global:
     - CC_TEST_REPORTER_ID=9075139db94c625bacbe5d3e7fd49ba5eb4051267c12b94baa43d7259a0829b0
