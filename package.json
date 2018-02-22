@@ -40,7 +40,8 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
-    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
+	"semantic-release-prepare": "ts-node tools/semantic-release-prepare",
+	"changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once"
   },
