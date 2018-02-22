@@ -1,10 +1,11 @@
-/// <reference path="./sequential-event.d.ts"/>
+import {
+	SequentialEvent,
+	IEventHandler,
+	IEventHash,
+	IEventsHash,
+	IOnceHandler,
+} from './sequential-event';
 
-import { SequentialEvent } from './sequential-event';
-
-import IEventHandler = SequentialEvent.IEventHandler;
-import IEventsHash = SequentialEvent.IEventsHash;
-import IEventHash = SequentialEvent.IEventHash;
 /**
  * Handle execution of a single handler.
  *
@@ -99,7 +100,7 @@ export const onceify = (
 	target: SequentialEvent,
 	eventName: string,
 	eventFn: IEventHandler
-): SequentialEvent.IOnceHandler => {
+): IOnceHandler => {
 	let called = false;
 	const once = function(...args: any[]) {
 		if (!called) {
@@ -107,7 +108,7 @@ export const onceify = (
 			called = true;
 			return eventFn(...args);
 		}
-	} as SequentialEvent.IOnceHandler;
+	} as IOnceHandler;
 	once.origFn = eventFn;
 	return once;
 };
@@ -123,7 +124,7 @@ const removeSingleListener = (
 		(() => {
 			const I = eventCat.length;
 			for (let i = 0; i < I; i++) {
-				if ((eventCat[i] as SequentialEvent.IOnceHandler).origFn === callback) {
+				if ((eventCat[i] as IOnceHandler).origFn === callback) {
 					return i;
 				}
 			}

@@ -1,7 +1,9 @@
-import IEventHandler = SequentialEvent.IEventHandler;
-import IEventsHash = SequentialEvent.IEventsHash;
-import IEventHash = SequentialEvent.IEventHash;
-
+import {
+	IEventHandler,
+	IEventHash,
+	IEventsHash,
+	IOnceHandler,
+} from './interfaces';
 import {
 	getNextPromise,
 	addEventListener,
@@ -185,3 +187,4 @@ export class SequentialEvent {
 		return this.__events.hasOwnProperty(event) && this.__events[event].length > 0;
 	}
 }
+export * from './interfaces';
