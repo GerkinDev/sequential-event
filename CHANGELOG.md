@@ -1,6 +1,27 @@
-<a name="0.3.1"></a>
-## <small>0.3.1 (2018-01-29)</small>
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/GerkinDev/sequential-event/compare/v0.4.0...v0.4.1) (2018-02-22)
 
+### Bug Fixes
+
+* **interfaces.ts:** Interfaces were not correctly exported, fixed now. ([ce8a0ea](https://github.com/GerkinDev/sequential-event/commit/ce8a0ea))
+
+
+
+
+
+
+
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/GerkinDev/sequential-event/compare/v0.3.1...v0.4.0) (2018-01-29)
+
+
+
+
+
+
+
+<a name="0.3.1"></a>
+## [0.3.1](https://github.com/GerkinDev/sequential-event/compare/v0.3.0...v0.3.1) (2017-10-30)
 
 
 
@@ -13,6 +34,9 @@
 * Rewrite code highly inspired from [uEvent](https://github.com/mistic100/uEvent)
 * *once* add to the same events list than *on*, but deregister event after first call
 
+### Features
+
+* **SequentialEvent:** Added has/hasEvent method ([4b6231e](https://github.com/GerkinDev/sequential-event/commit/4b6231e))
 
 
 
