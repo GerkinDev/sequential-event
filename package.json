@@ -7,8 +7,8 @@
     "EventEmitter",
     "Control-Flow"
   ],
-  "main": "dist/sequential-event.umd.js",
-  "module": "dist/sequential-event.es5.js",
+  "main": "dist/lib/sequential-event.js",
+  "module": "dist/es/sequential-event.js",
   "typings": "dist/types/sequential-event.d.ts",
   "directories": {
     "doc": "docs",
@@ -29,9 +29,9 @@
   },
   "scripts": {
     "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs --outDir dist/lib && rollup -c rollup.config.ts",
     "doc": "typedoc --out dist/docs --target es6 --theme minimal --mode file src",
+    "prebuild": "rimraf dist",
+    "build": "tsc --module commonjs --outDir dist/lib && rollup -c rollup.config.ts && npm run doc",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest",
     "test:watch": "jest --watch",
