@@ -60,7 +60,7 @@
 ## [0.1.2](https://github.com/GerkinDev/sequential-event/compare/v0.1.1...v0.1.2) (2017-10-12)
 
 * Updated dependencies
-* Added code checks with [CodeClimate](https://codeclimate.com/github/GerkinDev/SequentialEvent.js) & dependencies security checks with [Gemnasium](https://gemnasium.com/github.com/GerkinDev/SequentialEvent.js)
+* Added code checks with [CodeClimate](https://codeclimate.com/github/GerkinDev/sequential-event) & dependencies security checks with [Gemnasium](https://gemnasium.com/github.com/GerkinDev/sequential-event)
 
 
 <a name="0.1.1"></a>
