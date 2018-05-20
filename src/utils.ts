@@ -1,10 +1,5 @@
-import {
-	SequentialEvent,
-	IEventHandler,
-	IEventHash,
-	IEventsHash,
-	IOnceHandler,
-} from './sequential-event';
+import { SequentialEvent } from './sequential-event';
+import { IEventHandler, IOnceHandler, IEventHash, IEventsHash} from './interfaces';
 
 /**
  * Handle execution of a single handler.
@@ -88,10 +83,10 @@ export const getNextPromise = (
 /**
  * Generate an event handler that deregister itself when executed. This handler will be executed  just once.
  *
- * @param   {SequentialEvent}   target    - Event emitter that will use the handler.
- * @param   {string}   eventName - Name of the event to trigger.
- * @param   {IEventHandler} eventFn   - Handler for the event.
- * @returns {IEventHandler} Function that will be executed only once.
+ * @param   target    - Event emitter that will use the handler.
+ * @param   eventName - Name of the event to trigger.
+ * @param   eventFn   - Handler for the event.
+ * @returns Function that will be executed only once.
  * @memberof SequentialEvent
  * @author Gerkin
  * @inner
