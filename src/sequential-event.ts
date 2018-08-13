@@ -57,7 +57,7 @@ export class SequentialEvent {
 			return Promise.resolve();
 		}
 
-		const retPromise = emitHandlers(handler, this, args);
+		const retPromise = emitHandlers(handler.slice(0), this, args);
 
 		return retPromise;
 	}

@@ -217,6 +217,20 @@ describe('Once & remove listeners', () => {
 
 		expect(test).toHaveBeenCalledTimes(1);
 	});
+	it('Paralllel execution of "once" should be prevented inside the handler function', async () => {
+		const tests = [jest.fn(), jest.fn()];
+		const mySequentialEvent = new SequentialEvent();
+
+		mySequentialEvent.once('a', tests);
+		await Promise.all([
+			mySequentialEvent.emit('a', 'FOO', 1),
+			mySequentialEvent.emit('a', 'BAR', 42),
+		]);
+		expect(tests[0]).toHaveBeenCalledTimes(1);
+		expect(tests[0]).toHaveBeenCalledWith('FOO', 1);
+		expect(tests[1]).toHaveBeenCalledTimes(1);
+		expect(tests[1]).toHaveBeenCalledWith('BAR', 42);
+	});
 	it('Remove all listeners', async () => {
 		const tests = [jest.fn(), jest.fn()];
 		const mySequentialEvent = new SequentialEvent();

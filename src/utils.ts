@@ -59,11 +59,6 @@ export const getNextPromise = (
 	return (resolve: Function, reject: (reason: any) => any) => {
 		const _getNextPromise = (prevResolve?: any) => {
 			// Handle if an event handler disapeared during event dispatching
-			const handlersLength2 = handlers.length;
-			if (handlersLength2 !== handlersLength) {
-				i -= handlersLength - handlersLength2;
-				handlersLength = handlersLength2;
-			}
 			if (i < handlersLength) {
 				const stepArgs =
 					'undefined' !== typeof prevResolve
