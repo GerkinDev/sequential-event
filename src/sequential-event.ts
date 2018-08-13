@@ -1,14 +1,7 @@
+import { IEventHandler, IEventHash, IEventsHash } from './interfaces';
 import {
-	IEventHandler,
-	IEventHash,
-	IEventsHash,
-	IOnceHandler,
-} from './interfaces';
-import {
-	getNextPromise,
 	addEventListener,
 	removeEventListener,
-	ensureArray,
 	emitHandlers,
 	onceify,
 	forEachObj,

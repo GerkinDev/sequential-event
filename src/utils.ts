@@ -1,12 +1,15 @@
 import { SequentialEvent } from './sequential-event';
-import { IEventHandler, IOnceHandler, IEventHash, IEventsHash} from './interfaces';
+import {
+	IEventHandler,
+	IOnceHandler,
+	IEventHash,
+	IEventsHash,
+} from './interfaces';
 
 /**
  * Handle execution of a single handler.
  *
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 const emitHandler = (
 	handler: IEventHandler,
@@ -27,9 +30,7 @@ const emitHandler = (
 /**
  * Handle execution of all handlers in sequence.
  *
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 export const emitHandlers = (
 	handlers: IEventHandler | IEventHandler[],
@@ -44,9 +45,7 @@ export const emitHandlers = (
 /**
  * Generate next promise for sequence.
  *
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 
 export const getNextPromise = (
@@ -82,9 +81,7 @@ export const getNextPromise = (
  * @param   eventName - Name of the event to trigger.
  * @param   eventFn   - Handler for the event.
  * @returns Function that will be executed only once.
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 export const onceify = (
 	target: SequentialEvent,
@@ -92,13 +89,14 @@ export const onceify = (
 	eventFn: IEventHandler
 ): IOnceHandler => {
 	let called = false;
-	const once = function(...args: any[]) {
+	const once = ((...args: any[]) => {
+		// On the first call, unhook the function and execute the callback
 		if (!called) {
 			target.off(eventName, once);
 			called = true;
 			return eventFn(...args);
 		}
-	} as IOnceHandler;
+	}) as IOnceHandler;
 	once.origFn = eventFn;
 	return once;
 };
@@ -133,9 +131,7 @@ const removeSingleListener = (
 /**
  * Remove provided `callback` from listeners of event `eventCat`.
  *
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 export const removeEventListener = (
 	eventCat: IEventHandler[],
@@ -152,9 +148,7 @@ export const removeEventListener = (
 /**
  * Add an event listener to the provided event hash.
  *
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 export const addEventListener = (
 	eventHash: IEventsHash,
@@ -169,9 +163,7 @@ export const addEventListener = (
 /**
  * Ensure that event & callback are on the associative hash format.
  *
- * @memberof SequentialEvent
  * @author Gerkin
- * @inner
  */
 
 export const ensureArray: <T>(data: T | T[]) => T[] = <T>(data: T | T[]) => {

@@ -290,6 +290,7 @@ describe('Use Objects to describe events', () => {
 		await Promise.all([mySequentialEvent.emit('a'), mySequentialEvent.emit('b')]);
 
 		expect(tests.a).toHaveBeenCalledTimes(1);
+
 		expect(tests.b[0]).toHaveBeenCalledTimes(1);
 		expect(tests.b[1]).toHaveBeenCalledTimes(1);
 	});
