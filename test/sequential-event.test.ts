@@ -29,6 +29,13 @@ describe('Event Emitter', () => {
 		expect(mySequentialEvent1.hasEvent('a')).toEqual(true);
 		expect(mySequentialEvent1.hasEvent('b')).toEqual(false);
 	});
+	it('Reject invalid parameters', () => {
+		const mySequentialEvent = new SequentialEvent();
+
+		expect(() => mySequentialEvent.on(1 as any)).toThrowError(TypeError);
+		expect(() => mySequentialEvent.on('foo' as any)).toThrowError(TypeError);
+		expect(() => mySequentialEvent.on({} as any, 'foo' as any)).toThrowError(TypeError);
+	})
 	describe('Synchrone events', () => {
 		it('Single event, single callback', async () => {
 			const test = jest.fn();

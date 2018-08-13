@@ -167,9 +167,6 @@ export const addEventListener = (
  */
 
 export const ensureArray: <T>(data: T | T[]) => T[] = <T>(data: T | T[]) => {
-	if ('undefined' === typeof data) {
-		return [];
-	}
 	return (Array === data.constructor ? data : [data]) as T[];
 };
 
@@ -186,7 +183,7 @@ export const castArgsToEventsHash = (
 ) => {
 	if (typeof events === 'string' && typeof callback !== 'undefined') {
 		const eventsHash: IEventsHash = {};
-		const callbackArr: IEventHandler[] = ensureArray(callback);
+		const callbackArr = ensureArray(callback);
 		events.split(' ').forEach(event => {
 			eventsHash[event] = callbackArr;
 		});
@@ -199,6 +196,6 @@ export const castArgsToEventsHash = (
 		);
 		return eventsHash;
 	} else {
-		throw new Error('Incorrect parameters');
+		throw new TypeError('Incorrect parameters');
 	}
 };
