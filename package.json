@@ -29,7 +29,7 @@
 	},
 	"scripts": {
 		"lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-		"doc": "typedoc --out dist/docs --target es6 --theme minimal --mode file src",
+		"doc": "typedoc --out docs --target es6 --theme minimal --mode file src",
 		"prebuild": "rimraf dist",
 		"build": "npm run build:typescript && npm run build:rollup && npm run doc",
 		"build:typescript": "tsc --module commonjs --outDir dist/lib",
@@ -41,9 +41,8 @@
 		"deploy-docs": "ts-node tools/gh-pages-publish",
 		"report-coverage": "cat ./coverage/lcov.info | coveralls",
 		"commit": "git-cz",
-		"semantic-release": "semantic-release",
-		"semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-		"changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
+		"changelog": "npx conventional-changelog -p angular -i CHANGELOG.md -s",
+		"version": "npm run changelog && git add CHANGELOG.md && npm run doc && git add --force docs",
 		"travis-deploy-once": "travis-deploy-once"
 	},
 	"prettier": {
