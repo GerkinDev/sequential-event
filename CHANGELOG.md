@@ -1,3 +1,12 @@
+## [0.4.4](https://github.com/GerkinDev/sequential-event/compare/v0.4.3...v0.4.4) (2018-08-14)
+
+
+### Bug Fixes
+
+* **SequentialEvent.Emit:** Copy handlers array on event emission ([fe7e727](https://github.com/GerkinDev/sequential-event/commit/fe7e727))
+
+
+
 ## [0.4.3](https://github.com/GerkinDev/sequential-event/compare/v0.4.2...v0.4.3) (2018-05-20)
 
 
