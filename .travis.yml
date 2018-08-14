@@ -2,31 +2,36 @@ language: node_js
 branches:
   only:
     - master
+    - staging
     - /^greenkeeper/.*$/
-cache:
-  yarn: true
-  directories:
-    - node_modules
 notifications:
   email: false
 node_js:
-  - node
+  - "10"
+  - "9"
+  - "8"
+os:
+  - linux
+  - osx
+matrix:
+  include:
+  - node_js: "lts/*"
+    os: linux
+    env: CC_SAMPLE=true
+  - node_js: "lts/*"
+    os: osx
+before_install:
+  - rm -f npm-shrinkwrap.json
 before_script:
   - |
     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     chmod +x ./cc-test-reporter
-    ./cc-test-reporter before-build
+    if [ "$CC_SAMPLE" = "true" ]; then ./cc-test-reporter before-build; fi
 script:
   - npm run test:prod
 after_script:
   - |
-    ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-after_success:
-  - npm run build
-  - npm run deploy-docs
-  - npm run semantic-release
-  - npm run changelog
-  - git stash && git checkout -B develop && git stash pop && git add . && git reset npm-shrinkwrap.json package-lock.json &&  git commit -m "Bump version" && git push --force https://$GH_TOKEN@github.com/GerkinDev/sequential-event.git post_ci
-env:
-  global:
-    - CC_TEST_REPORTER_ID=9075139db94c625bacbe5d3e7fd49ba5eb4051267c12b94baa43d7259a0829b0
+    if [ "$CC_SAMPLE" = "true" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+cache:
+  directories:
+    - "node_modules"
