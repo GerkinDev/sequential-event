@@ -1,3 +1,7 @@
+## [0.4.5](https://github.com/GerkinDev/sequential-event/compare/v0.4.4...v0.4.5) (2018-08-31)
+
+
+
 ## [0.4.4](https://github.com/GerkinDev/sequential-event/compare/v0.4.3...v0.4.4) (2018-08-14)
 
 

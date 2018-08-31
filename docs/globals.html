@@ -976,7 +976,7 @@ img { max-width: 100%; }
 			sequentialy, and may return <strong>Promises</strong> if it executes asynchronous code.</p>
 			<p>For usage in the browser, use the files in the <code>dist</code> directory</p>
 			<h2 id="example-usage">Example usage</h2>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> SequentialEvent = <span class="hljs-built_in">require</span>( <span class="hljs-string">'sequential-event'</span> );
+			<pre><code class="language-javascript"><span class="hljs-keyword">const</span> SequentialEvent = <span class="hljs-built_in">require</span>( <span class="hljs-string">'sequential-event'</span> );
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sampleTime</span>(<span class="hljs-params"> startTime </span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime() - startTime;
@@ -1010,8 +1010,7 @@ eventEmitter
     .emit( <span class="hljs-string">'retime'</span>, <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime())
     <span class="hljs-comment">// Log normaly if everything is OK, or log with error</span>
     .then( <span class="hljs-function"><span class="hljs-params">timers</span> =&gt;</span> <span class="hljs-built_in">console</span>.log( timers ))
-    .catch( <span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.error( err ));
-</code></pre>
+    .catch( <span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.error( err ));</code></pre>
 			<p>Here is an example of output of this code:</p>
 			<blockquote>
 				<p>[ 1, 109, 109 ]</p>
@@ -1043,8 +1042,7 @@ eventListener.<span class="hljs-literal">off</span>( <span class="hljs-string">'
 eventListener.<span class="hljs-literal">off</span>({
     event1: cbFoo,
     event2: cbBar,
-});
-</code></pre><h3 id="once">once</h3>
+});</code></pre><h3 id="once">once</h3>
 			<p>Bind callbacks to specified events. The callback will be executable a single
 			time for each event.</p>
 			<p>Signatures:</p>
@@ -1060,8 +1058,7 @@ eventListener.once( <span class="hljs-string">'event1 event2'</span>, <span clas
 eventListener.once({
     event1: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> Promise.resolve( <span class="hljs-string">'foo'</span> ),
     event2: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> Promise.resolve( <span class="hljs-string">'bar'</span> ),
-});
-</code></pre><h3 id="on">on</h3>
+});</code></pre><h3 id="on">on</h3>
 			<p>Attach callbacks to specified events.</p>
 			<p>Signatures:</p>
 			<blockquote>
@@ -1074,8 +1071,7 @@ eventListener.<span class="hljs-literal">on</span>( <span class="hljs-string">'e
 eventListener.<span class="hljs-literal">off</span>({
     event1: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> Promise.resolve( <span class="hljs-string">'foo'</span> ),
     event2: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> Promise.resolve( <span class="hljs-string">'bar'</span> ),
-});
-</code></pre><h2 id="compatibility">Compatibility</h2>
+});</code></pre><h2 id="compatibility">Compatibility</h2>
 			<p>This package can run on:</p>
 			<ul>
 				<li>Node <code>&gt;=</code> 6.0.0</li>
@@ -1141,7 +1137,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L153">utils.ts:153</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L153">utils.ts:153</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1175,7 +1171,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L180">utils.ts:180</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L180">utils.ts:180</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1201,7 +1197,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L14">utils.ts:14</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L14">utils.ts:14</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1235,7 +1231,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L35">utils.ts:35</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L35">utils.ts:35</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1269,7 +1265,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L169">utils.ts:169</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L169">utils.ts:169</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1303,7 +1299,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L173">utils.ts:173</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L173">utils.ts:173</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1361,7 +1357,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L51">utils.ts:51</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L51">utils.ts:51</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1434,7 +1430,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L86">utils.ts:86</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L86">utils.ts:86</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1484,7 +1480,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L136">utils.ts:136</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L136">utils.ts:136</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1515,7 +1511,7 @@ eventListener.<span class="hljs-literal">off</span>({
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/b90310f/src/utils.ts#L104">utils.ts:104</a></li>
+								<li>Defined in <a href="https://github.com/GerkinDev/sequential-event/blob/0010692/src/utils.ts#L104">utils.ts:104</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
